@@ -1,6 +1,7 @@
 package com.gdsc.blog.user;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +17,8 @@ public class UserController {
     @ResponseBody
     @Operation(summary = "Login", description = "Login")
     public String login(
-        String id,
-        String password
+        @Parameter(name="id", description = "user id") String id,
+        @Parameter(name="password", description = "user password") String password
     ) {
         return "Hello, login!";
     }
