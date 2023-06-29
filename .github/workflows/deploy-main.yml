@@ -1,0 +1,45 @@
+name: Deploy to cloudtype
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Connect deploy key
+        uses: cloudtype-github-actions/connect@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          ghtoken: ${{ secrets.GHP_TOKEN }}
+      - name: Deploy
+        uses: cloudtype-github-actions/deploy@v1
+        with:
+          token: ${{ secrets.CLOUDTYPE_TOKEN }}
+          project: namju/blog_api
+          stage: main
+          yaml: |
+            name: blog-api
+            app: java@17
+            options:
+              ports: 8080
+              start: ""
+              env:
+                - name: DB_HOST
+                  value: mariadb
+                - name: DB_PORT
+                  value: "3306"
+                - name: DB_NAME
+                  value: blog
+                - name: DB_USER
+                  value: namju
+                - name: DB_PASSWORD
+                  secret: mariadb-user-password
+                - name: SPRING_PROFILES_ACTIVE
+                  value: prod
+            context:
+              git:
+                url: git@github.com:${{ github.repository }}.git
+                ref: ${{ github.ref }}
