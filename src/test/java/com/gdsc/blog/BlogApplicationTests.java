@@ -4,19 +4,24 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.gdsc.blog.user.Member;
+import com.gdsc.blog.user.MemberRepository;
 import com.gdsc.blog.user.MemberService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
+@Transactional
 @Profile("test")
 class BlogApplicationTests {
-
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private MemberRepository memberRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
 
@@ -50,7 +55,10 @@ class BlogApplicationTests {
 
         //test normal login
         try{
-            Member getMember = memberService.login(username1, password2);
+            Member getMember = memberService.login(username1, password1);
+            System.out.println("getMember.getId()= " + getMember.getId());
+            System.out.println("getMember.getUsername() = " + getMember.getUsername());
+            System.out.println("getMember.getPassword() = " + getMember.getPassword());
         } catch (IllegalArgumentException e) {
             assertEquals("Wrong password", e.getMessage());
         }
