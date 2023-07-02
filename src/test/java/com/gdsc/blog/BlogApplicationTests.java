@@ -66,8 +66,18 @@ class BlogApplicationTests {
         //test wrong login
         try {
             Member getMember = memberService.login(username2, password2);
+            System.out.println("getMember.getId()= " + getMember.getId());
+            System.out.println("getMember.getUsername() = " + getMember.getUsername());
+            System.out.println("getMember.getPassword() = " + getMember.getPassword());
         } catch (IllegalArgumentException e) {
             assertEquals("No such user", e.getMessage());
         }
+    }
+
+    @Test
+    public void testCreateJwtToken() throws Exception {
+        JwtToken jwtToken = new JwtToken(); //create jwt token object
+        String token = jwtToken.createJwtToken(); //create jwt token
+        System.out.println("token = " + token); //print jwt token
     }
 }
