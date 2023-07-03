@@ -1,7 +1,13 @@
 package com.gdsc.blog.user;
 
-public class user {
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+
+@Entity
+public class Customer {
+    @Id
     private String ID;
+
     private String password;
     private String address;
     private String phone;
@@ -10,11 +16,9 @@ public class user {
     public String getID() {
         return ID;
     }
-
     public void setID(String ID) {
         this.ID = ID;
     }
-
     public String getPassword() {
         return password;
     }
