@@ -27,6 +27,7 @@ class BlogApplicationTests {
 		if(oq.isPresent()) {
 			Member q = oq.get();
 			assertEquals("cj8556", q.getID());
+			assertEquals("test1234",q.getPassword());
 		}
 	}
 

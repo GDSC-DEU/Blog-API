@@ -23,11 +23,12 @@ public class MemberController {
     }
     @PostMapping("/login")
     @ResponseBody
-    public String login(@RequestBody String ID, String pwd){
-        memberService.login(ID, pwd);
+    public String login(@RequestBody Member member){
+        memberService.login(member.getID(), member.getPassword());
         return "redirect:/user/login_ok";
     }
     @PostMapping("/register")
+    @ResponseBody
     public String register(@RequestBody Member member){
         ResponseEntity.ok(memberService.register(member));
         return "redirect:/user/login";
