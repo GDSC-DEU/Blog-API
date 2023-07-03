@@ -60,7 +60,7 @@ class BlogApplicationTests {
             System.out.println("getMember.getUsername() = " + getMember.getUsername());
             System.out.println("getMember.getPassword() = " + getMember.getPassword());
         } catch (IllegalArgumentException e) {
-            assertEquals("Wrong password", e.getMessage());
+            assertEquals("Wrong id or password", e.getMessage());
         }
 
         //test wrong login
@@ -70,14 +70,28 @@ class BlogApplicationTests {
             System.out.println("getMember.getUsername() = " + getMember.getUsername());
             System.out.println("getMember.getPassword() = " + getMember.getPassword());
         } catch (IllegalArgumentException e) {
-            assertEquals("No such user", e.getMessage());
+            assertEquals("Wrong id or password", e.getMessage());
         }
     }
 
     @Test
     public void testCreateJwtToken() throws Exception {
+        String username = "test";
+        String password = "test123";
+
+        //signup
+        Member member = memberService.join(username, password);
+
+        //login
+        try{
+            Member getMember = memberService.login(username, password);
+        }catch(IllegalArgumentException e){
+            assertEquals("Wrong id or password", e.getMessage());
+        }
+
+        //create token
         JwtToken jwtToken = new JwtToken(); //create jwt token object
-        String token = jwtToken.createJwtToken(); //create jwt token
+        String token = jwtToken.createJwtToken(member); //create jwt token
         System.out.println("token = " + token); //print jwt token
     }
 }
