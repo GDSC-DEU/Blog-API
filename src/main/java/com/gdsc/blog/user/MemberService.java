@@ -49,10 +49,10 @@ public class MemberService {
             if (passwordEncoder.matches(password, member.get().getPassword())) {
                 return member.get(); //return user
             } else { //wrong password
-                throw new IllegalArgumentException("Wrong password");
+                throw new IllegalArgumentException("Wrong id or password");
             }
         } else { //not exist user
-            throw new IllegalArgumentException("No such user");
+            throw new IllegalArgumentException("Wrong id or password");
         }
     }
 }
