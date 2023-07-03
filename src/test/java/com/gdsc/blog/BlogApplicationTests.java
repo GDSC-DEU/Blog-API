@@ -17,7 +17,7 @@ class BlogApplicationTests {
 	@Autowired
 	MemberRepository userRepository;
 	@Test
-	void testJoin() {
+	void testJoin() { //회원가입 테스트
 		Member user1 = new Member();
 		user1.setID("cj8556");
 		user1.setPassword("test1234");
