@@ -12,7 +12,6 @@ import lombok.Setter;
 public class Member {
     @Id
     private String ID;
-
     private String password;
     private String phone;
     @Column(unique = true)
