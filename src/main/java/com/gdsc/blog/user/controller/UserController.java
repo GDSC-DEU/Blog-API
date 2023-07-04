@@ -59,6 +59,7 @@ public class UserController {
 	}
 
 	@GetMapping("/whoisme")
+	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
 	public User whoisme(HttpServletRequest req) {
 		return userService.whoami(req);
 	}
