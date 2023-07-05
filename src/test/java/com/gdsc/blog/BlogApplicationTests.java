@@ -77,9 +77,15 @@ class BlogApplicationTests {
         //update post
         post1.setTitle("Post1 title updated");
         post1.setContent("Post1 content updated");
-        this.articleRepository.save(post1);
+        this.articleRepository.save(post1); //save post
         assertEquals("Post1 title updated", post1.getTitle());
-        assertEquals("Post1 content update", post1.getContent());
+        assertEquals("Post1 content updated", post1.getContent());
+
+        //delete post
+        assertEquals(2, this.articleRepository.count()); //before delete post
+        this.articleRepository.delete(post1); //delete one post
+        assertEquals(1, this.articleRepository.count()); //after delete post
+
     }
 
 }
