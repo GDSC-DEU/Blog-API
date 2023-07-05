@@ -1,8 +1,12 @@
 package com.gdsc.blog;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,14 +23,50 @@ class BlogApplicationTests {
 
     @Test
     void testRepository(){
-        //create new post
+        ////create new post
         Article post1 = new Article();
         //set title and content
-        post1.setTitle("Post test 1 title");
-        post1.setContent("Post test 2 content");
+        post1.setTitle("Post1 title");
+        post1.setContent("Post1 content");
         post1.setCreateDate(LocalDateTime.now());
         //save post
         this.articleRepository.save(post1);
+
+        Article post2 = new Article();
+        post2.setTitle("Post2 title");
+        post2.setContent("Post2 content");
+        post2.setCreateDate(LocalDateTime.now());
+        this.articleRepository.save(post2);
+
+        ////find all post
+        List<Article> posts = this.articleRepository.findAll();
+        assertEquals(2, posts.size()); //check post count
+
+        ////check post title and content
+        Article p1 = posts.get(0);
+        assertEquals("Post1 title", p1.getTitle());
+        assertEquals("Post1 content", p1.getContent());
+        Article p2 = posts.get(1);
+        assertEquals("Post2 title", p2.getTitle());
+        assertEquals("Post2 content", p2.getContent());
+
+        ////get id
+        Optional<Article> oa1 = this.articleRepository.findById(p1.getIdx());
+        Optional<Article> oa2 = this.articleRepository.findById(p2.getIdx());
+        if(oa1.isPresent() && oa2.isPresent()){
+            Article a1 = oa1.get();
+            Article a2 = oa2.get();
+            assertEquals("Post1 title", a1.getTitle());
+            assertEquals("Post1 content", a1.getContent());
+            assertEquals("Post2 title", a2.getTitle());
+            assertEquals("Post2 content", a2.getContent());
+        }
+
+        //search by title
+        Article a1 = this.articleRepository.findByTitle("Post1 title");
+        assertEquals(1, a1.getIdx());
+        Article a2 = this.articleRepository.findByTitle("Post2 title");
+        assertEquals(2, a2.getIdx());
     }
 
 }
