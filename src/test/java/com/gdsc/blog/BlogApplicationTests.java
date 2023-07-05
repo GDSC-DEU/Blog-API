@@ -73,6 +73,13 @@ class BlogApplicationTests {
         post1 = findPost.get(0);
         assertEquals("Post1 title", post1.getTitle());
         assertEquals("Post1 content", post1.getContent());
+
+        //update post
+        post1.setTitle("Post1 title updated");
+        post1.setContent("Post1 content updated");
+        this.articleRepository.save(post1);
+        assertEquals("Post1 title updated", post1.getTitle());
+        assertEquals("Post1 content update", post1.getContent());
     }
 
 }
