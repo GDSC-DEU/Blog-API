@@ -67,6 +67,12 @@ class BlogApplicationTests {
         assertEquals(1, a1.getIdx());
         Article a2 = this.articleRepository.findByTitle("Post2 title");
         assertEquals(2, a2.getIdx());
+
+        //search by title or content
+        List<Article> findPost = this.articleRepository.findByTitleLikeOrContentLike("%Post1%", "%Post1%");
+        post1 = findPost.get(0);
+        assertEquals("Post1 title", post1.getTitle());
+        assertEquals("Post1 content", post1.getContent());
     }
 
 }
