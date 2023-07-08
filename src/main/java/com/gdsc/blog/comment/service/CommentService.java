@@ -21,7 +21,8 @@ public class CommentService {
         Comment comment = new Comment();
         comment.setArticle(article);
         comment.setContent(content);
-        comment.setCreeateData(LocalDateTime.now());
+        comment.setCreateData(LocalDateTime.now());
+        comment.setModifyData(LocalDateTime.now());
         this.commentRepository.save(comment);
     }
 
@@ -33,5 +34,13 @@ public class CommentService {
     public Comment getComment(Long idx){
         //return comment object if exists, or thorw exception
         return this.commentRepository.findById(idx).orElseThrow();
+    }
+
+    /**
+     * Update comment
+     * @param comment comment object
+     */
+    public void update(Comment comment){
+        this.commentRepository.save(comment);
     }
 }

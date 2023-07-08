@@ -48,4 +48,17 @@ public class CommentController {
         Comment comment = this.commentService.getComment(idx); //get comment object
         return comment.getContent(); //return comment content
     }
+
+    /**
+     * Update comment
+     * @param idx comment id
+     * @param content comment content
+     */
+    @PostMapping("/update/{commentId}")
+    public void updateComment(@PathVariable("commentId") Long idx, @RequestParam String content){
+        Comment comment = this.commentService.getComment(idx); //get comment object
+        comment.setContent(content); //update comment content
+        comment.setModifyData(LocalDateTime.now()); //update modify date
+        this.commentService.update(comment); //save comment
+    }
 }

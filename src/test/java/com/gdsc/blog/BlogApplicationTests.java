@@ -117,9 +117,15 @@ class BlogApplicationTests {
         List<Comment> comments = this.commentRepository.findByArticleIdx(articleIdx);
         assertEquals(3, comments.size()); //check comment count
 
-        //get comment by id
+        //get comment content
         Comment c = this.commentService.getComment(Long.valueOf(3)); //get comment by id
         String content = c.getContent(); //get comment content
         assertEquals("post1 comment3", content); //check comment content
+
+        //update comment
+        c.setContent("post1 comment3 updated");
+        c.setModifyData(LocalDateTime.now());
+        this.commentService.update(c);
+        assertEquals("post1 comment3 updated", c.getContent()); //check updated content
     }
 }

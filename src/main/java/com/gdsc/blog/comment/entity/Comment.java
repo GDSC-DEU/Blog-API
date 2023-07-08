@@ -28,7 +28,8 @@ public class Comment {
     @Column(length = 200)
     private String content; //내용
 
-    private LocalDateTime creeateData;
+    private LocalDateTime createData; //create date
+    private LocalDateTime modifyData; //update date
 
     @ManyToOne
     private Article article;
