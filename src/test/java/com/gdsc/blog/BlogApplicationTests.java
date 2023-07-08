@@ -118,8 +118,8 @@ class BlogApplicationTests {
         assertEquals(3, comments.size()); //check comment count
 
         //get comment by id
-        Comment c = comments.get(2);
-        String content = this.commentService.getComment(c.getIdx()).getContent();
-        assertEquals("post1 comment3", content);
+        Comment c = this.commentService.getComment(Long.valueOf(3)); //get comment by id
+        String content = c.getContent(); //get comment content
+        assertEquals("post1 comment3", content); //check comment content
     }
 }

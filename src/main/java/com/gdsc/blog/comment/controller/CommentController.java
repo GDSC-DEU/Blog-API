@@ -34,8 +34,8 @@ public class CommentController {
      */
     @PostMapping("/create/{postId}")
     public void createComment(@PathVariable("id") Long idx, @RequestParam String content){
-        Article article = this.articleService.getArticle(idx);
-        this.commentService.create(article, content);
+        Article article = this.articleService.getArticle(idx); //get article object
+        this.commentService.create(article, content); //create comment
     }
 
     /**
@@ -45,7 +45,7 @@ public class CommentController {
      */
     @PostMapping("/read/{commentId}")
     public String readComment(@PathVariable("commentId") Long idx){
-        Comment comment = this.commentService.getComment(idx);
-        return comment.getContent();
+        Comment comment = this.commentService.getComment(idx); //get comment object
+        return comment.getContent(); //return comment content
     }
 }

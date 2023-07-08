@@ -31,6 +31,7 @@ public class CommentService {
      * @return comment object
      */
     public Comment getComment(Long idx){
+        //return comment object if exists, or thorw exception
         return this.commentRepository.findById(idx).orElseThrow();
     }
 }
