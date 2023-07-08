@@ -27,9 +27,25 @@ public class CommentController {
     private final ArticleService articleService;
     private final CommentService commentService;
 
+    /**
+     * Create comment
+     * @param idx article id
+     * @param content comment content
+     */
     @PostMapping("/create/{postId}")
     public void createComment(@PathVariable("id") Long idx, @RequestParam String content){
         Article article = this.articleService.getArticle(idx);
         this.commentService.create(article, content);
+    }
+
+    /**
+     * Read comment
+     * @param idx comment id
+     * @return comment content
+     */
+    @PostMapping("/read/{commentId}")
+    public String readComment(@PathVariable("commentId") Long idx){
+        Comment comment = this.commentService.getComment(idx);
+        return comment.getContent();
     }
 }

@@ -108,14 +108,18 @@ class BlogApplicationTests {
         this.articleRepository.save(post1);
 
         //create new comment
-        String content = "post1 comment";
-        this.commentService.create(post1, content);
-        this.commentService.create(post1, content);
-        this.commentService.create(post1, content);
+        for(int i = 0; i < 3; i++){
+            this.commentService.create(post1, "post1 comment" + String.valueOf(i+1));
+        }
 
         //get comment by article
         Long articleIdx = post1.getIdx();
         List<Comment> comments = this.commentRepository.findByArticleIdx(articleIdx);
         assertEquals(3, comments.size()); //check comment count
+
+        //get comment by id
+        Comment c = comments.get(2);
+        String content = this.commentService.getComment(c.getIdx()).getContent();
+        assertEquals("post1 comment3", content);
     }
 }

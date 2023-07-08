@@ -12,11 +12,25 @@ import org.springframework.stereotype.Service;
 public class CommentService {
     private final CommentRepository commentRepository;
 
+    /**
+     * Create comment
+     * @param article article object
+     * @param content comment content
+     */
     public void create(Article article, String content){
         Comment comment = new Comment();
         comment.setArticle(article);
         comment.setContent(content);
         comment.setCreeateData(LocalDateTime.now());
         this.commentRepository.save(comment);
+    }
+
+    /**
+     * Get comment object
+     * @param idx comment id
+     * @return comment object
+     */
+    public Comment getComment(Long idx){
+        return this.commentRepository.findById(idx).orElseThrow();
     }
 }
