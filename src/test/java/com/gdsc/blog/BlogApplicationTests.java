@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
+import com.gdsc.blog.comment.entity.Comment;
+import com.gdsc.blog.comment.repository.CommentRepository;
+import com.gdsc.blog.comment.service.CommentService;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +25,7 @@ class BlogApplicationTests {
     void contextLoads() {}
 
     @Test
-    void testRepository(){
+    void testArticle(){
         ////create new post
         Article post1 = new Article();
         //set title and content
@@ -85,7 +88,34 @@ class BlogApplicationTests {
         assertEquals(2, this.articleRepository.count()); //before delete post
         this.articleRepository.delete(post1); //delete one post
         assertEquals(1, this.articleRepository.count()); //after delete post
-
     }
 
+
+    @Autowired
+    private CommentRepository commentRepository;
+    @Autowired
+    private CommentService commentService;
+
+    @Test
+    void testComment(){
+        //create new post
+        Article post1 = new Article();
+        //set title and content
+        post1.setTitle("Post1 title");
+        post1.setContent("Post1 content");
+        post1.setCreateDate(LocalDateTime.now());
+        //save post
+        this.articleRepository.save(post1);
+
+        //create new comment
+        String content = "post1 comment";
+        this.commentService.create(post1, content);
+        this.commentService.create(post1, content);
+        this.commentService.create(post1, content);
+
+        //get comment by article
+        Long articleIdx = post1.getIdx();
+        List<Comment> comments = this.commentRepository.findByArticleIdx(articleIdx);
+        assertEquals(3, comments.size()); //check comment count
+    }
 }
