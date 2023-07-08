@@ -61,4 +61,10 @@ public class CommentController {
         comment.setModifyData(LocalDateTime.now()); //update modify date
         this.commentService.update(comment); //save comment
     }
+
+    @PostMapping("/delete/{commentId}")
+    public void deleteComment(@PathVariable("commentId") Long idx){
+        Comment comment = this.commentService.getComment(idx); //get comment object
+        this.commentService.delete(comment); //delete comment
+    }
 }

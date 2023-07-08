@@ -32,7 +32,7 @@ public class CommentService {
      * @return comment object
      */
     public Comment getComment(Long idx){
-        //return comment object if exists, or thorw exception
+        //return comment object if exists, or throw exception
         return this.commentRepository.findById(idx).orElseThrow();
     }
 
@@ -42,5 +42,9 @@ public class CommentService {
      */
     public void update(Comment comment){
         this.commentRepository.save(comment);
+    }
+
+    public void delete(Comment comment){
+        this.commentRepository.delete(comment);
     }
 }

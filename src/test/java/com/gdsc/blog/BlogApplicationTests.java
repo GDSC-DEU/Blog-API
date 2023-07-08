@@ -127,5 +127,9 @@ class BlogApplicationTests {
         c.setModifyData(LocalDateTime.now());
         this.commentService.update(c);
         assertEquals("post1 comment3 updated", c.getContent()); //check updated content
+
+        //delete comment
+        this.commentService.delete(c);
+        assertEquals(2, this.commentRepository.count()); //check comment count
     }
 }
