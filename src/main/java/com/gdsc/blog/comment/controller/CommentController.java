@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/comment")
+@RequestMapping("api/comment")
 @RequiredArgsConstructor
 @Slf4j
 @Tag(name = "Comment", description = "Comment API")
