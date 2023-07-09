@@ -35,7 +35,8 @@ public class Article {
     @Column(columnDefinition = "TEXT") //no limit length of text
     private String content;
 
-    private LocalDateTime createDate;
+    private LocalDateTime createDate; //생성 날짜
+    private LocalDateTime modifyDate; //수정된 날짜
 
     //set relationship between article and user
     @ManyToOne

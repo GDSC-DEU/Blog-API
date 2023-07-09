@@ -26,14 +26,24 @@ public class ArticleService {
         article.setTitle(title);
         article.setContent(content);
         article.setCreateDate(LocalDateTime.now());
+        article.setModifyDate(LocalDateTime.now());
         article.setUser(user);
         this.articleRepository.save(article);
     }
 
+    /**
+     * 게시글 목록 조회
+     * @return 게시글 목록
+     */
     public List<Article> getArticleList(){ //get all articles
         return this.articleRepository.findAll();
     }
 
+    /**
+     * id로 게시글 조회
+     * @param idx 게시글 id
+     * @return Article 객체
+     */
     public Article getArticle(Long idx){ //get article by id
         Optional <Article> article = this.articleRepository.findById(idx);
         if(article.isPresent()){
@@ -42,5 +52,21 @@ public class ArticleService {
         else{ //not found article by id
             throw new NullPointerException("Article not found");
         }
+    }
+
+    /**
+     * 게시글 수정
+     * @param article Article 객체
+     */
+    public void update(Article article){
+        this.articleRepository.save(article);
+    }
+
+    /**
+     * 게시글 삭제
+     * @param article Article 객체
+     */
+    public void delete(Article article){
+        this.articleRepository.delete(article);
     }
 }
