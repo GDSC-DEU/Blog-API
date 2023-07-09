@@ -1,7 +1,5 @@
 package com.gdsc.blog.user.controller;
 
-import java.util.HashSet;
-import java.util.Set;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +16,6 @@ import com.gdsc.blog.user.dto.SignInDto;
 import com.gdsc.blog.user.dto.SignUpDto;
 import com.gdsc.blog.user.dto.Token;
 import com.gdsc.blog.user.entity.User;
-import com.gdsc.blog.user.entity.UserRole;
 
 @Slf4j
 @Tag(name = "User", description = "User API")
@@ -49,13 +46,12 @@ public class UserController {
 		Token token = Token.builder()
 				.token(userService.singin(signInDto.getEmail(), signInDto.getPassword())).build();
 		return token;
-
 	}
 
 	@GetMapping("/getUser/{email}")
 	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	public User getUser(@PathVariable("email") String email) {
-		return userService.getUser(email);
+		return userService.getUserByEmail(email);
 	}
 
 	@GetMapping("/whoisme")

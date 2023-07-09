@@ -31,10 +31,9 @@ public class SecurityConfig {
 						"/v3/api-docs/**", "/api/user/signin", "/api/user/signup")
 				.permitAll().anyRequest().authenticated();
 
-		http.csrf().disable();
+		http.csrf(csrf->csrf.disable());
 
 		http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
-
 		return http.build();
 	}
 }
