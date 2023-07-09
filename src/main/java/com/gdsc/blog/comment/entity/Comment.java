@@ -1,6 +1,7 @@
 package com.gdsc.blog.comment.entity;
 
 import com.gdsc.blog.article.entity.Article;
+import com.gdsc.blog.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -33,4 +34,7 @@ public class Comment {
 
     @ManyToOne
     private Article article;
+
+    @ManyToOne
+    private User user;
 }

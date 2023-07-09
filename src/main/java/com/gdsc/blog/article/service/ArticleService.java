@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
+    
+
     public List<Article> getArticleList(){ //get all articles
         return this.articleRepository.findAll();
     }

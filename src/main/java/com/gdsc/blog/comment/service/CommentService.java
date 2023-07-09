@@ -3,6 +3,7 @@ package com.gdsc.blog.comment.service;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.comment.repository.CommentRepository;
+import com.gdsc.blog.user.entity.User;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,13 +17,15 @@ public class CommentService {
      * Create comment
      * @param article article object
      * @param content comment content
+     * @param user login user
      */
-    public void create(Article article, String content){
+    public void create(Article article, String content, User user){
         Comment comment = new Comment();
         comment.setArticle(article);
         comment.setContent(content);
         comment.setCreateData(LocalDateTime.now());
         comment.setModifyData(LocalDateTime.now());
+        comment.setUser(user);
         this.commentRepository.save(comment);
     }
 

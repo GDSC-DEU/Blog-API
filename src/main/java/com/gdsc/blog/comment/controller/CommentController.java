@@ -3,16 +3,15 @@ package com.gdsc.blog.comment.controller;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.comment.entity.Comment;
-import com.gdsc.blog.comment.repository.CommentRepository;
 import com.gdsc.blog.comment.service.CommentService;
+import com.gdsc.blog.user.entity.User;
+import com.gdsc.blog.user.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,16 +25,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class CommentController {
     private final ArticleService articleService;
     private final CommentService commentService;
+    private final UserService userService;
 
     /**
      * Create comment
      * @param idx article id
      * @param content comment content
+     * @param principal login user
      */
     @PostMapping("/create/{postId}")
-    public void createComment(@PathVariable("id") Long idx, @RequestParam String content){
+    public void createComment(@PathVariable("id") Long idx, @RequestParam String content, Principal principal){
         Article article = this.articleService.getArticle(idx); //get article object
-        this.commentService.create(article, content); //create comment
+        User user = this.userService.getUser(principal.getName()); //login 유저 정보 가져오기
+
+        this.commentService.create(article, content, user); //create comment
     }
 
     /**
