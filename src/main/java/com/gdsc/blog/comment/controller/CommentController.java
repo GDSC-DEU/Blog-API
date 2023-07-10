@@ -11,11 +11,14 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequestMapping("api/comment")
@@ -58,16 +61,24 @@ public class CommentController {
      * @param content comment content
      */
     @PostMapping("/update/{commentId}")
-    public void updateComment(@PathVariable("commentId") Long idx, @RequestParam String content){
+    @PreAuthorize("isAuthenticated()")
+    public void updateComment(@PathVariable("commentId") Long idx, @RequestParam String content, Principal principal){
         Comment comment = this.commentService.getComment(idx); //get comment object
+        if(!comment.getUser().getUsername().equals(principal.getName())){ //수정 권한 확인
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글을 수정할 권한이 없습니다.");
+        }
         comment.setContent(content); //update comment content
         comment.setModifyData(LocalDateTime.now()); //update modify date
         this.commentService.update(comment); //save comment
     }
 
     @PostMapping("/delete/{commentId}")
-    public void deleteComment(@PathVariable("commentId") Long idx){
+    @PreAuthorize("isAuthenticated()")
+    public void deleteComment(@PathVariable("commentId") Long idx, Principal principal){
         Comment comment = this.commentService.getComment(idx); //get comment object
+        if(comment.getUser().getUsername().equals(principal.getName())){ //삭제 권한 확인
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글을 삭제할 권한이 없습니다.");
+        }
         this.commentService.delete(comment); //delete comment
     }
 }

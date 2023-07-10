@@ -40,8 +40,8 @@ public class ArticleController {
         return "article/list";
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/update/{articleId}")
+    @PreAuthorize("isAuthenticated()")
     public void updateArticle(String title, String content, Long id, Principal principal){
         Article article = this.articleService.getArticle(id); //게시글 정보 가져오기
         if(!article.getUser().getUsername().equals(principal.getName())){ //게시글 작성자와 로그인 유저가 다를 경우
@@ -53,11 +53,11 @@ public class ArticleController {
         this.articleService.update(article);
     }
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{articleId}")
+    @PreAuthorize("isAuthenticated()")
     public void deleteArticle(Long id, Principal principal){
         Article article = this.articleService.getArticle(id); //게시글 정보 가져오기
-        if(!article.getUser().getUsername().equals(principal.getName())){ //게시글 작성자와 로그인 유저가 다를 경우
+        if(!article.getUser().getUsername().equals(principal.getName())){ //게시글 삭제 권한 확인
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "게시글을 삭제할 권한이 없습니다.");
         }
         this.articleService.delete(article);
