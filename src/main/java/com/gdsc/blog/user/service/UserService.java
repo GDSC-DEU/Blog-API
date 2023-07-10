@@ -1,12 +1,8 @@
 package com.gdsc.blog.user.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.AuthenticationManager;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.gdsc.blog.security.jwt.JwtTokenProvider;
@@ -57,8 +53,12 @@ public class UserService {
 		return userRepository.save(user);
 	}
 
-	public User getUser(String username) {
-		return userRepository.findByEmail(username).get();
+	public User getUserByEmail(String useremail) {
+		return userRepository.findByEmail(useremail).get();
+	}
+
+	public User getUserByName(String username){
+		return userRepository.findByUsername(username).get();
 	}
 
 	public User whoami(HttpServletRequest req) {
@@ -67,5 +67,30 @@ public class UserService {
 				.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)))
 				.get();
 	}
-
+	/////////////////////////admin 유저 생성/////////////////
+//	@EventListener
+//	public void createAdminAccount(ApplicationReadyEvent event) {
+//		// 관리자 계정 정보
+//		String adminEmail = "admin";
+//		String adminPassword = "admin";
+//		String adminUsername = "admin";
+//
+//		// 이미 관리자 계정이 존재하는지 확인
+//		if (userRepository.existsByEmail(adminEmail)) {
+//			return; // 이미 관리자 계정이 존재하면 생성하지 않음
+//		}
+//
+//		// 관리자 계정 생성
+//		User adminUser = new User();
+//		adminUser.setEmail(adminEmail);
+//		adminUser.setPassword(passwordEncoder.encode(adminPassword));
+//		adminUser.setUsername(adminUsername);
+//		// admin 역할 부여
+//		if (adminUser.getRoles() == null) {
+//			List<UserRole> set = new ArrayList<UserRole>();
+//			set.add(UserRole.ROLE_ADMIN);
+//			adminUser.setRoles(set);
+//		}
+//		userRepository.save(adminUser);
+//	}
 }
