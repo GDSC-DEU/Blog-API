@@ -4,9 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
+import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.comment.repository.CommentRepository;
 import com.gdsc.blog.comment.service.CommentService;
+import com.gdsc.blog.user.controller.UserController;
+import com.gdsc.blog.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +21,20 @@ import org.springframework.context.annotation.Profile;
 @SpringBootTest
 @Profile("test")
 class BlogApplicationTests {
-    @Autowired
-    private ArticleRepository articleRepository;
 
     @Test
     void contextLoads() {}
+
+    @Autowired
+    private UserController userController;
+
+
+    @Autowired
+    private ArticleRepository articleRepository;
+
+    @Autowired
+    private ArticleService articleService;
+
 
     @Test
     void testArticle(){

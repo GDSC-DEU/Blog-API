@@ -3,15 +3,18 @@ package com.gdsc.blog.article.service;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
 import com.gdsc.blog.user.entity.User;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
 @Service
+@Tag(name = "게시글 Service", description = "Article service API")
 public class ArticleService {
     private final ArticleRepository articleRepository;
 
@@ -21,7 +24,11 @@ public class ArticleService {
      * @param content 내용
      * @param user 작성자
      */
-    public void createArticle(String title, String content, User user){ //create new article
+    @Operation(summary = "게시글 생성")
+    public void createArticle(
+        @Parameter(name = "제목") String title,
+        @Parameter(name = "내용") String content,
+        @Parameter(name = "유저 객체") User user){ //create new article
         Article article = new Article();
         article.setTitle(title);
         article.setContent(content);
@@ -35,6 +42,7 @@ public class ArticleService {
      * 게시글 목록 조회
      * @return 게시글 목록
      */
+    @Operation(summary = "게시글 목록 가져오기")
     public List<Article> getArticleList(){ //get all articles
         return this.articleRepository.findAll();
     }
@@ -44,7 +52,9 @@ public class ArticleService {
      * @param idx 게시글 id
      * @return Article 객체
      */
-    public Article getArticle(Long idx){ //get article by id
+    @Operation(summary = "게시글 조회")
+    public Article getArticle(
+        @Parameter(name = "게시글 id") Long idx){ //get article by id
         Optional <Article> article = this.articleRepository.findById(idx);
         if(article.isPresent()){
             return article.get();
@@ -58,7 +68,9 @@ public class ArticleService {
      * 게시글 수정
      * @param article Article 객체
      */
-    public void update(Article article){
+    @Operation(summary = "게시글 수정")
+    public void update(
+        @Parameter(name = "개시글 객체") Article article){
         this.articleRepository.save(article);
     }
 
@@ -66,7 +78,9 @@ public class ArticleService {
      * 게시글 삭제
      * @param article Article 객체
      */
-    public void delete(Article article){
+    @Operation(summary = "게시글 삭제")
+    public void delete(
+        @Parameter(name = "개시글 객체") Article article){
         this.articleRepository.delete(article);
     }
 }
