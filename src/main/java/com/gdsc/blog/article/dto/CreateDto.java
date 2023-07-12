@@ -13,9 +13,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateDto {
-    @Schema(description = "제목")
+    @Schema(description = "제목", example = "게시글 제목")
     public String title;
 
-    @Schema(description = "내용")
+    @Schema(description = "내용", example = "게시글 내용")
     public String content;
 }
