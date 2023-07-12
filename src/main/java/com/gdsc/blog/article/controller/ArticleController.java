@@ -1,7 +1,7 @@
 package com.gdsc.blog.article.controller;
 
-import com.gdsc.blog.article.dto.CreateDto;
-import com.gdsc.blog.article.dto.UpdateDto;
+import com.gdsc.blog.article.dto.ArticleCreateDto;
+import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.user.entity.User;
@@ -46,7 +46,7 @@ public class ArticleController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')") //권한 설정
     @Operation(summary = "게시글 생성") //swagger 설명
     public Article createArticle(
-        @Parameter(name="게시글 생성 DTO") @RequestBody CreateDto dto){
+        @Parameter(name="게시글 생성 DTO") @RequestBody ArticleCreateDto dto){
         //게시글 생성
         Article article = Article.builder()
             .title(dto.getTitle())
@@ -77,7 +77,7 @@ public class ArticleController {
         return articleService.getUserArticle(user);
     }
 
-    @GetMapping("/update/{id}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "id로 게시글 조회")
     public Article getArticleById(
@@ -97,7 +97,7 @@ public class ArticleController {
     @Operation(summary = "게시글 수정")
     public Article updateArticle(
         @PathVariable(value = "id") Long id,
-        @Parameter(name="게시글 생성 DTO") @RequestBody UpdateDto dto,
+        @Parameter(name="게시글 생성 DTO") @RequestBody ArticleUpdateDto dto,
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) throws ChangeSetPersister.NotFoundException, AccessDeniedException {
         User user = userService.whoami(req);
 

@@ -1,6 +1,6 @@
 package com.gdsc.blog.article.service;
 
-import com.gdsc.blog.article.dto.UpdateDto;
+import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
 import com.gdsc.blog.user.entity.User;
@@ -71,7 +71,7 @@ public class ArticleService {
     @Operation(summary = "게시글 수정")
     public Article updateArticle(
         @Parameter(name = "게시글 id") Long id,
-        @Parameter(name = "게시글 수정 DTO") UpdateDto dto,
+        @Parameter(name = "게시글 수정 DTO") ArticleUpdateDto dto,
         @Parameter(name = "작성자") User user){
 
         Article article = getArticleById(id); //게시글 id로 게시글 가져오기

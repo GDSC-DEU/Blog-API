@@ -8,45 +8,56 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
 @Service
+@RequiredArgsConstructor
 @Tag(name = "댓글 service", description = "Comment service API")
 public class CommentService {
     private final CommentRepository commentRepository;
 
     /**
-     * Create comment
-     * @param article article object
-     * @param content comment content
-     * @param user login user
+     * 댓글 생성
+     * @param comment 댓글 객체
+     * @param article 개시글 객체
+     * @param user 로그인 유저 객체
      */
     @Operation(summary = "댓글 생성")
-    public void create(
-        @Parameter(name = "article", description = "댓글을 생성할 게시글") Article article,
-        @Parameter(name = "댓글 내용") String content,
-        @Parameter(name = "로그인 유저", description = "user 객체") User user){
-        Comment comment = new Comment();
+    public Comment create(
+        @Parameter(name = "댓글 객체") Comment comment,
+        @Parameter(name = "게시글 내용") Article article,
+        @Parameter(name = "로그인 유저") User user){
         comment.setArticle(article);
-        comment.setContent(content);
+        comment.setUser(user);
         comment.setCreateData(LocalDateTime.now());
         comment.setModifyData(LocalDateTime.now());
-        comment.setUser(user);
-        this.commentRepository.save(comment);
+        
+        return commentRepository.save(comment);
+    }
+
+    public List<Comment> getAllCommandByArticle(Article article){
+        return commentRepository.findByArticle(article);
     }
 
     /**
-     * Get comment object
-     * @param idx comment id
-     * @return comment object
+     * id로 댓글 조회
+     * @param idx 댓글 id
+     * @return 댓글 객체
      */
-    @Operation(summary = "id로 댓글 가져오기")
-    public Comment getComment(
+    @Operation(summary = "id로 댓글 조회")
+    public Comment getCommentById(
         @Parameter(name = "댓글 id") Long idx) {
-        //return comment object if exists, or throw exception
-        return this.commentRepository.findById(idx).orElseThrow();
+        Optional <Comment> comment = commentRepository.findById(idx);
+
+        if(comment.isPresent()){
+            return comment.get();
+        }
+        else{
+            throw new NullPointerException("Not found Comment by id");
+        }
     }
 
     /**
@@ -56,12 +67,12 @@ public class CommentService {
     @Operation(summary = "댓글 수정")
     public void update(
         @Parameter(name = "댓글", description = "수정할 댓글 객체") Comment comment){
-        this.commentRepository.save(comment);
+        commentRepository.save(comment);
     }
 
     @Operation(summary = "댓글 삭제")
     public void delete(
         @Parameter(name = "댓글", description = "삭제할 댓글 객체") Comment comment){
-        this.commentRepository.delete(comment);
+        commentRepository.delete(comment);
     }
 }
