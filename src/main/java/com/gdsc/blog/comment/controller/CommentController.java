@@ -87,11 +87,11 @@ public class CommentController {
      * @param req HTTP 파싱 객체
      * @return 댓글 객체
      */
-    @GetMapping("/{postId}")
+    @GetMapping("/{commentId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "id로 댓글 조회")
     public Comment getCommentById(
-        @PathVariable("postId") Long id,
+        @PathVariable("commentId") Long id,
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
         User user = userService.whoami(req);
 
