@@ -45,7 +45,7 @@ public class CommentController {
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
         User user = userService.whoami(req); //로그인 유저 정보 가져오기
 
-        Article article = this.articleService.getArticle(idx); //get article object
+        Article article = this.articleService.getArticleById(idx); //get article object
         this.commentService.create(article, content, user); //create comment
     }
 

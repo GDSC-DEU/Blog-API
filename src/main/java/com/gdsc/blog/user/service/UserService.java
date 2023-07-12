@@ -26,8 +26,16 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
 
-
-
+    public User signup(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Client 역할 부여
+        if (user.getRoles() == null) {
+            List<UserRole> set = new ArrayList<UserRole>();
+            set.add(UserRole.ROLE_CLIENT);
+            user.setRoles(set);
+        }
+        return userRepository.save(user);
+    }
 
     public String singin(String email, String password) {
         try {
@@ -46,17 +54,6 @@ public class UserService {
             log.error("Invalid username/password supplied");
             throw new RuntimeException("Invalid username/password supplied");
         }
-    }
-
-    public User signup(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        // Client 역할 부여
-        if (user.getRoles() == null) {
-            List<UserRole> set = new ArrayList<UserRole>();
-            set.add(UserRole.ROLE_CLIENT);
-            user.setRoles(set);
-        }
-        return userRepository.save(user);
     }
 
     public User getUser(String username) {

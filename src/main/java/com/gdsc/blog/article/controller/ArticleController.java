@@ -1,6 +1,7 @@
 package com.gdsc.blog.article.controller;
 
 import com.gdsc.blog.article.dto.CreateDto;
+import com.gdsc.blog.article.dto.UpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.user.entity.User;
@@ -13,11 +14,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,10 +42,10 @@ public class ArticleController {
      * @return 생성된 게시글
      */
     @PostMapping("/create") //컨트롤러 메핑
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')") //권한 설정
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')") //권한 설정
     @Operation(summary = "게시글 생성") //swagger 설명
     public Article createArticle(
-        @RequestBody CreateDto dto){
+        @Parameter(name="게시글 생성 DTO") @RequestBody CreateDto dto){
         //게시글 생성
         Article article = Article.builder()
             .title(dto.getTitle())
@@ -64,7 +67,7 @@ public class ArticleController {
      */
     @GetMapping("/allArticle")
     @Operation(summary = "모든 게시글 조회")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public List<Article> getUserArticle(
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req
     ) {
@@ -73,28 +76,31 @@ public class ArticleController {
         return articleService.getUserArticle(user);
     }
 
+    @GetMapping("/update/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @Operation(summary = "id로 게시글 조회")
+    public Article getArticleById(
+        @PathVariable("id") Long id, //PathVariable에는 @Parameter를 사용할 수 없음!
+        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
+        return articleService.getArticleById(id);
+    }
+
     /**
      * 게시글 수정
-     * @param title 제목
-     * @param content 내용
      * @param id 게시글 id
+     * @param dto 게시글 수정 정보
      * @param req HTTP 파싱 객체
      */
-    @GetMapping("/update/{articleId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @PostMapping("/update/{id}") //생성 & 수정은 PostMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글 수정")
-    public void updateArticle(
-        @Parameter(name = "제목") String title,
-        @Parameter(name = "수정할 내용") String content,
-        @Parameter(name = "게시글 id") Long id,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
+    public Article updateArticle(
+        @PathVariable(value = "id") Long id,
+        @Parameter(name="게시글 생성 DTO") @RequestBody UpdateDto dto,
+        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) throws ChangeSetPersister.NotFoundException, AccessDeniedException {
         User user = userService.whoami(req);
 
-        Article article = articleService.getArticle(id); //게시글 정보 가져오기
-        article.setTitle(title);
-        article.setContent(content);
-        article.setModifyDate(LocalDateTime.now());
-        articleService.update(article);
+        return articleService.updateArticle(id, dto, user);
     }
 
     /**
@@ -102,15 +108,16 @@ public class ArticleController {
      * @param id 게시글 id
      * @param req HTTP 파싱 객체
      */
-    @GetMapping("/delete/{articleId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
+    @GetMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글 삭제")
     public void deleteArticle(
-        @Parameter(name = "게시글 id") Long id,
+        @PathVariable(value = "id") Long id,
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
         User user = userService.whoami(req);
-        Article article = articleService.getArticle(id);
 
-        articleService.delete(article);
+        Article article = articleService.getArticleById(id);
+
+        articleService.deleteArticle(article);
     }
 }

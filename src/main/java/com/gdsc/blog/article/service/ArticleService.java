@@ -1,5 +1,6 @@
 package com.gdsc.blog.article.service;
 
+import com.gdsc.blog.article.dto.UpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
 import com.gdsc.blog.user.entity.User;
@@ -25,7 +26,7 @@ public class ArticleService {
      */
     @Operation(summary = "게시글 생성")
     public Article createArticle(
-        Article article,
+        @Parameter(name = "게시글 객체") Article article,
         @Parameter(name = "유저 객체") User user){ //create new article
         article.setCreateDate(LocalDateTime.now());
         article.setModifyDate(LocalDateTime.now());
@@ -48,25 +49,36 @@ public class ArticleService {
      * @return Article 객체
      */
     @Operation(summary = "게시글 조회")
-    public Article getArticle(
+    public Article getArticleById(
         @Parameter(name = "게시글 id") Long idx){ //get article by id
         Optional <Article> article = articleRepository.findById(idx);
+
         if(article.isPresent()){
             return article.get();
         }
         else{ //not found article by id
-            throw new NullPointerException("Article not found");
+            throw new NullPointerException("Not found Article by id");
         }
     }
 
     /**
      * 게시글 수정
-     * @param article Article 객체
+     * @param id 게시글 id
+     * @param dto 게시글 수정 DTO
+     * @param user 작성자
+     * @return Article 객체
      */
     @Operation(summary = "게시글 수정")
-    public void update(
-        @Parameter(name = "개시글 객체") Article article){
-        articleRepository.save(article);
+    public Article updateArticle(
+        @Parameter(name = "게시글 id") Long id,
+        @Parameter(name = "게시글 수정 DTO") UpdateDto dto,
+        @Parameter(name = "작성자") User user){
+
+        Article article = getArticleById(id); //게시글 id로 게시글 가져오기
+        article.setTitle(dto.getTitle());
+        article.setContent(dto.getContent());
+        article.setModifyDate(LocalDateTime.now());
+        return articleRepository.save(article);
     }
 
     /**
@@ -74,7 +86,7 @@ public class ArticleService {
      * @param article Article 객체
      */
     @Operation(summary = "게시글 삭제")
-    public void delete(
+    public void deleteArticle(
         @Parameter(name = "개시글 객체") Article article){
         articleRepository.delete(article);
     }

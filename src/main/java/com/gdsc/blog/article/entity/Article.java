@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor //생성자 자동 생성
 @Getter
 @Setter
 @Builder
