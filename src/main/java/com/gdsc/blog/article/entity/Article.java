@@ -1,5 +1,6 @@
 package com.gdsc.blog.article.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.user.entity.User;
 import jakarta.persistence.CascadeType;
@@ -14,6 +15,8 @@ import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,6 +26,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 @Table(name = "articles")
 public class Article {
     @Id
@@ -40,6 +44,7 @@ public class Article {
 
     //set relationship between article and user
     @ManyToOne
+    @JsonBackReference
     private User user;
 
     @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)

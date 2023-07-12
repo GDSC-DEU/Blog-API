@@ -1,5 +1,6 @@
 package com.gdsc.blog.comment.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.user.entity.User;
 import jakarta.persistence.Column;
@@ -36,5 +37,6 @@ public class Comment {
     private Article article;
 
     @ManyToOne
+    @JsonBackReference
     private User user;
 }
