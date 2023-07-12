@@ -10,7 +10,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,18 +20,13 @@ public class ArticleService {
 
     /**
      * 게시글 생성
-     * @param title 제목
-     * @param content 내용
+     * @param article Article 객체
      * @param user 작성자
      */
     @Operation(summary = "게시글 생성")
     public Article createArticle(
-        @Parameter(name = "제목") String title,
-        @Parameter(name = "내용") String content,
+        Article article,
         @Parameter(name = "유저 객체") User user){ //create new article
-        Article article = new Article();
-        article.setTitle(title);
-        article.setContent(content);
         article.setCreateDate(LocalDateTime.now());
         article.setModifyDate(LocalDateTime.now());
         article.setUser(user);

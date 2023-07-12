@@ -1,5 +1,6 @@
 package com.gdsc.blog.article.controller;
 
+import com.gdsc.blog.article.dto.CreateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.user.entity.User;
@@ -18,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,21 +35,26 @@ public class ArticleController {
 
     /**
      * 게시글 생성
-     * @param title 제목
-     * @param content 내용
+     * @param dto 게시글 생성 정보
      * @return 생성된 게시글
      */
     @PostMapping("/create") //컨트롤러 메핑
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')") //권한 설정
     @Operation(summary = "게시글 생성") //swagger 설명
     public Article createArticle(
-        @Parameter(name = "제목") String title, //swagger 파라미터 설명
-        @Parameter(name = "내용") String content) {
+        @RequestBody CreateDto dto){
+        //게시글 생성
+        Article article = Article.builder()
+            .title(dto.getTitle())
+            .content(dto.getContent())
+            .build();
+
+        //로그인 유저 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
 
-        User user = userService.getUserByName(userName); //로그인 유저 정보 가져오기
-        return articleService.createArticle(title, content, user); //게시글 생성
+        User user = userService.getUserByName(userName); //유저 이름 가져오기
+        return articleService.createArticle(article, user);
     }
 
     /**
