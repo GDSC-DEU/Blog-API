@@ -27,6 +27,8 @@ public class UserService {
     private final JwtTokenProvider jwtTokenProvider;
 
 
+
+
     public String singin(String email, String password) {
         try {
             User user = userRepository.findByEmail(email).get();
@@ -61,11 +63,25 @@ public class UserService {
         return userRepository.findByEmail(username).get();
     }
 
+    public User getUserByName(String username) {
+        try {
+            return userRepository.findByUsername(username).get();
+        } catch (Exception e) { //예외 처리
+            log.error("User not found");
+            throw new RuntimeException("User not found");
+        }
+    }
+
     public User whoami(HttpServletRequest req) {
-        log.info(jwtTokenProvider.resolveToken(req));
-        return userRepository
-            .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)))
-            .get();
+        try{
+            log.info(jwtTokenProvider.resolveToken(req));
+            return userRepository
+                .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)))
+                .get();
+        } catch (Exception e) { //예외 처리
+            log.error("User not found");
+            throw new RuntimeException("User not found");
+        }
     }
 
 }

@@ -9,18 +9,16 @@ import com.gdsc.blog.user.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import java.security.Principal;
+import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.server.ResponseStatusException;
 
 @Controller
 @RequestMapping("api/comment")
@@ -36,17 +34,18 @@ public class CommentController {
      * Create comment
      * @param idx article id
      * @param content comment content
-     * @param principal login user
+     * @param req HTTP parsing object
      */
-    @PostMapping("/create/{postId}")
+    @PostMapping("/create/{postId}") //컨트롤러 메핑
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')") //권한 설정
     @Operation(summary = "댓글 생성")
     public void createComment(
         @Parameter(name = "게시글 id") @PathVariable("postId") Long idx,
         @Parameter(name = "내용") String content,
-        @Parameter(name = "principal", description = "로그인 유저 정보를 가지는 principal 객체") Principal principal) {
-        Article article = this.articleService.getArticle(idx); //get article object
-        User user = this.userService.getUser(principal.getName()); //login 유저 정보 가져오기
+        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
+        User user = userService.whoami(req); //로그인 유저 정보 가져오기
 
+        Article article = this.articleService.getArticle(idx); //get article object
         this.commentService.create(article, content, user); //create comment
     }
 
@@ -56,6 +55,7 @@ public class CommentController {
      * @return comment content
      */
     @PostMapping("/read/{commentId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @Operation(summary = "댓글 읽기")
     public String readComment(
         @Parameter(name = "댓글 id") @PathVariable("commentId") Long idx){
@@ -67,33 +67,37 @@ public class CommentController {
      * Update comment
      * @param idx comment id
      * @param content comment content
+     * @param req HTTP parsing object
      */
     @PostMapping("/update/{commentId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @Operation(summary = "댓글 수정")
     public void updateComment(
         @Parameter(name = "댓글 id") @PathVariable("commentId") Long idx,
         @Parameter(name = "수정 내용") @RequestParam String content,
-        @Parameter(name = "principal", description = "로그인 유저 정보를 가지는 principal 객체") Principal principal){
+        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
+        User user = userService.whoami(req);
+
         Comment comment = this.commentService.getComment(idx); //get comment object
-        if(!comment.getUser().getUsername().equals(principal.getName())){ //수정 권한 확인
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글을 수정할 권한이 없습니다.");
-        }
         comment.setContent(content); //update comment content
         comment.setModifyData(LocalDateTime.now()); //update modify date
         this.commentService.update(comment); //save comment
     }
 
+    /**
+     * 댓글 삭제
+     * @param idx 댓글 id
+     * @param req HTTP 파싱 객체
+     */
     @PostMapping("/delete/{commentId}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @Operation(summary = "댓글 삭제")
     public void deleteComment(
         @Parameter(name = "댓글 id") @PathVariable("commentId") Long idx,
-        @Parameter(name = "principal", description = "로그인 유저 정보를 가지는 principal 객체") Principal principal){
+        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
+        User user = userService.whoami(req);
+
         Comment comment = this.commentService.getComment(idx); //get comment object
-        if(comment.getUser().getUsername().equals(principal.getName())){ //삭제 권한 확인
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "댓글을 삭제할 권한이 없습니다.");
-        }
         this.commentService.delete(comment); //delete comment
     }
 }
