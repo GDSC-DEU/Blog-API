@@ -83,7 +83,7 @@ public class ArticleService {
 
     /**
      * 게시글 삭제
-     * @param article Article 객체
+     * @param article 게시글 객체
      */
     @Operation(summary = "게시글 삭제")
     public void deleteArticle(

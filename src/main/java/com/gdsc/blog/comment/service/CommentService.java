@@ -1,6 +1,7 @@
 package com.gdsc.blog.comment.service;
 
 import com.gdsc.blog.article.entity.Article;
+import com.gdsc.blog.comment.dto.CommentUpdateDto;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.comment.repository.CommentRepository;
 import com.gdsc.blog.user.entity.User;
@@ -61,18 +62,30 @@ public class CommentService {
     }
 
     /**
-     * Update comment
-     * @param comment comment object
+     * 댓글 수정
+     * @param id 댓글 id
+     * @param commentUpdateDto 댓글 수정 DTO
      */
     @Operation(summary = "댓글 수정")
-    public void update(
-        @Parameter(name = "댓글", description = "수정할 댓글 객체") Comment comment){
-        commentRepository.save(comment);
+    public Comment updateComment(
+        @Parameter(name = "댓글 id") Long id,
+        @Parameter(name = "댓글 수정 DTO") CommentUpdateDto commentUpdateDto){
+
+        Comment comment = getCommentById(id);
+        comment.setContent(commentUpdateDto.getContent());
+        comment.setModifyData(LocalDateTime.now());
+
+        return commentRepository.save(comment);
     }
 
+
+    /**
+     * 댓글 삭제
+     * @param comment 댓글 객체
+     */
     @Operation(summary = "댓글 삭제")
     public void delete(
-        @Parameter(name = "댓글", description = "삭제할 댓글 객체") Comment comment){
+        @Parameter(name = "댓글", description = "댓글 객체") Comment comment){
         commentRepository.delete(comment);
     }
 }

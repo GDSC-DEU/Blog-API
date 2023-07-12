@@ -97,7 +97,7 @@ public class ArticleController {
     @Operation(summary = "게시글 수정")
     public Article updateArticle(
         @PathVariable(value = "id") Long id,
-        @Parameter(name="게시글 생성 DTO") @RequestBody ArticleUpdateDto dto,
+        @Parameter(name="게시글 수정 DTO") @RequestBody ArticleUpdateDto dto,
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) throws ChangeSetPersister.NotFoundException, AccessDeniedException {
         User user = userService.whoami(req);
 

@@ -1,9 +1,11 @@
 package com.gdsc.blog.comment.controller;
 
 import com.gdsc.blog.article.dto.ArticleCreateDto;
+import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.comment.dto.CommentCreateDto;
+import com.gdsc.blog.comment.dto.CommentUpdateDto;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.comment.service.CommentService;
 import com.gdsc.blog.user.entity.User;
@@ -58,8 +60,8 @@ public class CommentController {
 
         User user = userService.whoami(req); //로그인 유저 정보 가져오기
 
-        Article article = this.articleService.getArticleById(id); //get article object
-        return this.commentService.create(comment, article, user); //create comment
+        Article article = articleService.getArticleById(id); //get article object
+        return commentService.create(comment, article, user); //create comment
     }
 
     /**
@@ -76,7 +78,7 @@ public class CommentController {
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
         User user = userService.whoami(req);
 
-        Article article = this.articleService.getArticleById(id); //get article object
+        Article article = articleService.getArticleById(id); //get article object
 
         return commentService.getAllCommandByArticle(article); //return comment content
     }
@@ -99,40 +101,38 @@ public class CommentController {
     }
 
     /**
-     * Update comment
-     * @param idx comment id
-     * @param content comment content
-     * @param req HTTP parsing object
+     * 댓글 수정
+     * @param id 댓글 id
+     * @param dto 댓글 수정 정보
+     * @param req HTTP 파싱 객체
      */
     @PostMapping("/update/{commentId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "댓글 수정")
-    public void updateComment(
-        @Parameter(name = "댓글 id") @PathVariable("commentId") Long idx,
-        @Parameter(name = "수정 내용") @RequestParam String content,
+    public Comment updateComment(
+        @PathVariable("commentId") Long id,
+        @Parameter(name="댓글 수정 DTO") @RequestBody CommentUpdateDto dto,
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
         User user = userService.whoami(req);
 
-        Comment comment = this.commentService.getCommentById(idx); //get comment object
-        comment.setContent(content); //update comment content
-        comment.setModifyData(LocalDateTime.now()); //update modify date
-        this.commentService.update(comment); //save comment
+        return commentService.updateComment(id, dto);
     }
 
     /**
      * 댓글 삭제
-     * @param idx 댓글 id
+     * @param id 댓글 id
      * @param req HTTP 파싱 객체
      */
     @GetMapping("/delete/{commentId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "댓글 삭제")
     public void deleteComment(
-        @Parameter(name = "댓글 id") @PathVariable("commentId") Long idx,
+        @PathVariable("commentId") Long id,
         @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
         User user = userService.whoami(req);
 
-        Comment comment = this.commentService.getCommentById(idx); //get comment object
-        this.commentService.delete(comment); //delete comment
+        Comment comment = commentService.getCommentById(id); //get comment object
+
+        commentService.delete(comment); //delete comment
     }
 }
