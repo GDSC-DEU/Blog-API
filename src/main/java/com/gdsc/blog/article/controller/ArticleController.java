@@ -108,13 +108,13 @@ public class ArticleController {
     @PostMapping("/patch/{id}") //생성 & 수정은 PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글 수정")
-    public Article updateArticle(
+    public void updateArticle(
         @Parameter(description = "게시글 id") @PathVariable(value = "id") Long id,
         @Parameter(name="게시글 수정 DTO") @RequestBody ArticleUpdateDto dto,
         @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
-        return articleService.updateArticle(id, dto);
+        articleService.updateArticle(id, dto);
     }
 
     /**

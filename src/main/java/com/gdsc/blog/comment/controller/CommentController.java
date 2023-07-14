@@ -99,13 +99,13 @@ public class CommentController {
     @PostMapping("/patch/{commentId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "댓글 수정")
-    public Comment updateComment(
+    public void updateComment(
         @Parameter(description = "댓글 id") @PathVariable("commentId") Long id,
         @Parameter(name="댓글 수정 DTO") @RequestBody CommentUpdateDto dto,
         @Parameter(hidden = true) HttpServletRequest req){
         User user = userService.whoami(req);
 
-        return commentService.updateComment(id, dto);
+        commentService.updateComment(id, dto);
     }
 
     /**

@@ -57,12 +57,10 @@ public class CommentService {
      * @param commentUpdateDto 댓글 수정 DTO
      */
     @Transactional
-    public Comment updateComment(Long id, CommentUpdateDto commentUpdateDto) {
+    public void updateComment(Long id, CommentUpdateDto commentUpdateDto) {
 
         Comment comment = getCommentById(id);
         comment.setContent(commentUpdateDto.getContent());
-
-        return commentRepository.save(comment);
     }
 
 

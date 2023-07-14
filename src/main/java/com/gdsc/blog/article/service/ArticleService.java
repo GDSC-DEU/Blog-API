@@ -65,15 +65,15 @@ public class ArticleService {
      *
      * @param id   게시글 id
      * @param dto  게시글 수정 DTO
-     * @return Article 객체
      */
     @Transactional
-    public Article updateArticle(Long id, ArticleUpdateDto dto) {
+    public void updateArticle(Long id, ArticleUpdateDto dto) {
         Article article = getArticleById(id); //게시글 id로 게시글 가져오기
         article.setTitle(dto.getTitle());
         article.setContent(dto.getContent());
 
-        return articleRepository.save(article);
+        //articleRepository.save(article);
+        //Transactional 어노테이션으로 save() 메소드를 사용하지 않아도 된다.
     }
 
     /**
