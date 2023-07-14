@@ -5,7 +5,6 @@ import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
 import com.gdsc.blog.user.entity.User;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,6 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class ArticleService {
-
     private final ArticleRepository articleRepository;
 
     /**
@@ -27,8 +25,6 @@ public class ArticleService {
         Article article = Article.builder()
             .title(dto.getTitle())
             .content(dto.getContent())
-            .createDate(LocalDateTime.now())
-            .modifyDate(LocalDateTime.now())
             .user(user)
             .build();
 
@@ -73,7 +69,6 @@ public class ArticleService {
         Article article = getArticleById(id); //게시글 id로 게시글 가져오기
         article.setTitle(dto.getTitle());
         article.setContent(dto.getContent());
-        article.setModifyDate(LocalDateTime.now());
 
         return articleRepository.save(article);
     }

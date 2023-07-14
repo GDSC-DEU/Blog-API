@@ -5,7 +5,6 @@ import com.gdsc.blog.comment.dto.CommentUpdateDto;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.comment.repository.CommentRepository;
 import com.gdsc.blog.user.entity.User;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -26,9 +25,8 @@ public class CommentService {
     public Comment create(Article article, User user) {
         Comment comment = Comment.builder()
             .article(article)
+            .content(article.getContent())
             .user(user)
-            .createData(LocalDateTime.now())
-            .modifyData(LocalDateTime.now())
             .build();
 
         return commentRepository.save(comment);
@@ -60,7 +58,6 @@ public class CommentService {
 
         Comment comment = getCommentById(id);
         comment.setContent(commentUpdateDto.getContent());
-        comment.setModifyData(LocalDateTime.now());
 
         return commentRepository.save(comment);
     }
