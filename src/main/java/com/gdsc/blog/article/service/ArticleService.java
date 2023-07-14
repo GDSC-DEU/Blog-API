@@ -5,6 +5,7 @@ import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
 import com.gdsc.blog.user.entity.User;
+import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ public class ArticleService {
      * @param dto 게시글 생성 정보
      * @param user    작성자
      */
+    @Transactional
     public Article createArticle(ArticleCreateDto dto, User user) { //create new article
         Article article = Article.builder()
             .title(dto.getTitle())
@@ -65,6 +67,7 @@ public class ArticleService {
      * @param dto  게시글 수정 DTO
      * @return Article 객체
      */
+    @Transactional
     public Article updateArticle(Long id, ArticleUpdateDto dto) {
         Article article = getArticleById(id); //게시글 id로 게시글 가져오기
         article.setTitle(dto.getTitle());
@@ -78,6 +81,7 @@ public class ArticleService {
      *
      * @param article 게시글 객체
      */
+    @Transactional
     public void deleteArticle(Article article) {
         articleRepository.delete(article);
     }

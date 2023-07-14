@@ -18,7 +18,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @MappedSuperclass //엔티티 부모 클래스
 @NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
 @SuperBuilder
