@@ -46,17 +46,12 @@ public class CommentController {
     @Operation(summary = "댓글 생성")
     public Comment createComment(
         @Parameter(description = "게시글 id") @PathVariable("postId") Long id,
-        @Parameter(name="댓글 생성 DTO") @RequestBody CommentCreateDto dto,
+        @Parameter(name = "댓글 생성 DTO") @RequestBody CommentCreateDto dto,
         @Parameter(hidden = true) HttpServletRequest req) {
-
-        Comment comment = Comment.builder()
-            .content(dto.getContent())
-            .build();
-
         User user = userService.whoami(req); //로그인 유저 정보 가져오기
-
         Article article = articleService.getArticleById(id); //get article object
-        return commentService.create(comment, article, user); //create comment
+
+        return commentService.create(article, user); //create comment
     }
 
     /**

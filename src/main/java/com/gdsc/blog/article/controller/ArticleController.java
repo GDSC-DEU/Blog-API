@@ -11,11 +11,8 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,18 +45,12 @@ public class ArticleController {
     @Operation(summary = "게시글 생성") //swagger 설명
     public Article createArticle(
         @Parameter(name="게시글 생성 DTO") @RequestBody ArticleCreateDto dto){
-        //게시글 생성
-        Article article = Article.builder()
-            .title(dto.getTitle())
-            .content(dto.getContent())
-            .build();
-
         //로그인 유저 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String userName = authentication.getName();
-
         User user = userService.getUserByName(userName); //유저 이름 가져오기
-        return articleService.createArticle(article, user);
+
+        return articleService.createArticle(dto, user);
     }
 
     /**
@@ -120,10 +111,10 @@ public class ArticleController {
     public Article updateArticle(
         @Parameter(description = "게시글 id") @PathVariable(value = "id") Long id,
         @Parameter(name="게시글 수정 DTO") @RequestBody ArticleUpdateDto dto,
-        @Parameter(hidden = true) HttpServletRequest req) throws ChangeSetPersister.NotFoundException, AccessDeniedException {
+        @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
-        return articleService.updateArticle(id, dto, user);
+        return articleService.updateArticle(id, dto);
     }
 
     /**

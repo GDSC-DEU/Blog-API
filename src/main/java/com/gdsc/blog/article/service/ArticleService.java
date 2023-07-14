@@ -1,5 +1,6 @@
 package com.gdsc.blog.article.service;
 
+import com.gdsc.blog.article.dto.ArticleCreateDto;
 import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
@@ -19,15 +20,18 @@ public class ArticleService {
     /**
      * 게시글 생성
      *
-     * @param article Article 객체
+     * @param dto 게시글 생성 정보
      * @param user    작성자
      */
-    public Article createArticle(
-        Article article,
-        User user) { //create new article
-        article.setCreateDate(LocalDateTime.now());
-        article.setModifyDate(LocalDateTime.now());
-        article.setUser(user);
+    public Article createArticle(ArticleCreateDto dto, User user) { //create new article
+        Article article = Article.builder()
+            .title(dto.getTitle())
+            .content(dto.getContent())
+            .createDate(LocalDateTime.now())
+            .modifyDate(LocalDateTime.now())
+            .user(user)
+            .build();
+
         return articleRepository.save(article);
     }
 
@@ -63,11 +67,9 @@ public class ArticleService {
      *
      * @param id   게시글 id
      * @param dto  게시글 수정 DTO
-     * @param user 작성자
      * @return Article 객체
      */
-    public Article updateArticle(Long id, ArticleUpdateDto dto, User user) {
-
+    public Article updateArticle(Long id, ArticleUpdateDto dto) {
         Article article = getArticleById(id); //게시글 id로 게시글 가져오기
         article.setTitle(dto.getTitle());
         article.setContent(dto.getContent());

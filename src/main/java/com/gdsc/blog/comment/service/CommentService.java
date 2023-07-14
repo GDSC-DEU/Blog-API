@@ -20,15 +20,16 @@ public class CommentService {
     /**
      * 댓글 생성
      *
-     * @param comment 댓글 객체
      * @param article 개시글 객체
      * @param user    로그인 유저 객체
      */
-    public Comment create(Comment comment, Article article, User user) {
-        comment.setArticle(article);
-        comment.setUser(user);
-        comment.setCreateData(LocalDateTime.now());
-        comment.setModifyData(LocalDateTime.now());
+    public Comment create(Article article, User user) {
+        Comment comment = Comment.builder()
+            .article(article)
+            .user(user)
+            .createData(LocalDateTime.now())
+            .modifyData(LocalDateTime.now())
+            .build();
 
         return commentRepository.save(comment);
     }
