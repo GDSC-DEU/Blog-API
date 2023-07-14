@@ -102,7 +102,7 @@ public class ArticleController {
     @GetMapping("/get/title/{title}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "제목으로 게시글 조회")
-    public Optional<Article> getArticleByTitle(
+    public Article getArticleByTitle(
         @Parameter(description = "게시글 제목") @PathVariable(value = "title") String title,
         @Parameter(hidden = true) HttpServletRequest req){
         return articleService.getArticleByTitle(title);

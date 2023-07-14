@@ -49,15 +49,13 @@ public class ArticleService {
     public Article getArticleById(Long idx) { //get article by id
         Optional<Article> article = articleRepository.findById(idx);
 
-        if (article.isPresent()) {
-            return article.get();
-        } else { //not found article by id
-            throw new NullPointerException("Not found Article by id");
-        }
+        return article.orElseThrow(() -> new NullPointerException("Not found Article by id"));
     }
 
-    public Optional<Article> getArticleByTitle(String title){
-        return articleRepository.findByTitle(title);
+    public Article getArticleByTitle(String title){
+        Optional<Article> article = articleRepository.findByTitle(title);
+
+        return article.orElseThrow(() -> new NullPointerException("Not found Article by title"));
     }
 
     /**
@@ -74,6 +72,7 @@ public class ArticleService {
         article.setTitle(dto.getTitle());
         article.setContent(dto.getContent());
         article.setModifyDate(LocalDateTime.now());
+
         return articleRepository.save(article);
     }
 

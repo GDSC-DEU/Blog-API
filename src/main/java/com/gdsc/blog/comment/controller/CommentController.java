@@ -65,7 +65,7 @@ public class CommentController {
      * @param req HTTP 파싱 객체
      * @return 댓글 객체 List
      */
-    @GetMapping("/{postId}")
+    @GetMapping("/get/{postId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글에 대한 모든 댓글 조회")
     public List<Comment> getAllCommand(
@@ -84,7 +84,7 @@ public class CommentController {
      * @param req HTTP 파싱 객체
      * @return 댓글 객체
      */
-    @GetMapping("/get/{commentId}")
+    @GetMapping("/get/all/{commentId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "id로 댓글 조회")
     public Comment getCommentById(

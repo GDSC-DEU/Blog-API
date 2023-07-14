@@ -46,11 +46,7 @@ public class CommentService {
     public Comment getCommentById(Long idx) {
         Optional<Comment> comment = commentRepository.findById(idx);
 
-        if (comment.isPresent()) {
-            return comment.get();
-        } else {
-            throw new NullPointerException("Not found Comment by id");
-        }
+        return comment.orElseThrow(() -> new NullPointerException("Not found Comment by id"));
     }
 
     /**
