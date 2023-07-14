@@ -56,6 +56,10 @@ public class ArticleService {
         }
     }
 
+    public Optional<Article> getArticleByTitle(String title){
+        return articleRepository.findByTitle(title);
+    }
+
     /**
      * 게시글 수정
      *

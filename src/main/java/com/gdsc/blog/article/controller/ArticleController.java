@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.crossstore.ChangeSetPersister;
@@ -77,13 +78,34 @@ public class ArticleController {
         return articleService.getUserArticle(user);
     }
 
-    @GetMapping("/{id}")
+    /**
+     * id로 게시글 조회
+     * @param id 게시글 id
+     * @param req HTTP 파싱 객체
+     * @return 게시글
+     */
+    @GetMapping("/get/id/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "id로 게시글 조회")
     public Article getArticleById(
         @Parameter(description = "게시글 id") @PathVariable("id") Long id,
         @Parameter(hidden = true) HttpServletRequest req){
         return articleService.getArticleById(id);
+    }
+
+    /**
+     * 제목으로 게시글 조회
+     * @param title 게시글 제목
+     * @param req HTTP 파싱 객체
+     * @return 게시글
+     */
+    @GetMapping("/get/title/{title}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    @Operation(summary = "제목으로 게시글 조회")
+    public Optional<Article> getArticleByTitle(
+        @Parameter(description = "게시글 제목") @PathVariable(value = "title") String title,
+        @Parameter(hidden = true) HttpServletRequest req){
+        return articleService.getArticleByTitle(title);
     }
 
     /**
