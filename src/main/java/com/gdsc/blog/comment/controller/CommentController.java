@@ -45,7 +45,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')") //권한 설정
     @Operation(summary = "댓글 생성")
     public Comment createComment(
-        @Parameter(description = "댓글 id") @PathVariable("postId") Long id,
+        @Parameter(description = "게시글 id") @PathVariable("postId") Long id,
         @Parameter(name="댓글 생성 DTO") @RequestBody CommentCreateDto dto,
         @Parameter(hidden = true) HttpServletRequest req) {
 
@@ -69,7 +69,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글에 대한 모든 댓글 조회")
     public List<Comment> getAllCommand(
-        @Parameter(description = "댓글 id") @PathVariable("postId") Long id,
+        @Parameter(description = "게시글 id") @PathVariable("postId") Long id,
         @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
