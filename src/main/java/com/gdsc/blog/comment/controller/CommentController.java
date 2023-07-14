@@ -46,7 +46,7 @@ public class CommentController {
      * @param dto 댓글 생성 정보
      * @param req HTTP 파싱 객체
      */
-    @PostMapping("/create/{postId}") //컨트롤러 메핑
+    @PostMapping("/{postId}") //컨트롤러 메핑
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')") //권한 설정
     @Operation(summary = "댓글 생성")
     public Comment createComment(
@@ -70,7 +70,7 @@ public class CommentController {
      * @param req HTTP 파싱 객체
      * @return 댓글 객체 List
      */
-    @GetMapping("/allCommands/{postId}")
+    @GetMapping("/{postId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글에 대한 모든 댓글 조회")
     public List<Comment> getAllCommand(
@@ -89,7 +89,7 @@ public class CommentController {
      * @param req HTTP 파싱 객체
      * @return 댓글 객체
      */
-    @GetMapping("/{commentId}")
+    @GetMapping("/get/{commentId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "id로 댓글 조회")
     public Comment getCommentById(
@@ -106,7 +106,7 @@ public class CommentController {
      * @param dto 댓글 수정 정보
      * @param req HTTP 파싱 객체
      */
-    @PostMapping("/update/{commentId}")
+    @PostMapping("/patch/{commentId}")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "댓글 수정")
     public Comment updateComment(

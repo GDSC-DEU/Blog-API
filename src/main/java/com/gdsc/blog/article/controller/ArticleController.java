@@ -42,7 +42,7 @@ public class ArticleController {
      * @param dto 게시글 생성 정보
      * @return 생성된 게시글
      */
-    @PostMapping("/create") //컨트롤러 메핑
+    @PostMapping //컨트롤러 메핑
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')") //권한 설정
     @Operation(summary = "게시글 생성") //swagger 설명
     public Article createArticle(
@@ -66,7 +66,7 @@ public class ArticleController {
      * @param req HTTP 파싱 객체
      * @return 게시글 목록
      */
-    @GetMapping("/allArticle")
+    @GetMapping("/get")
     @Operation(summary = "모든 게시글 조회")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public List<Article> getUserArticle(
@@ -92,7 +92,7 @@ public class ArticleController {
      * @param dto 게시글 수정 정보
      * @param req HTTP 파싱 객체
      */
-    @PostMapping("/update/{id}") //생성 & 수정은 PostMapping
+    @PostMapping("/patch/{id}") //생성 & 수정은 PostMapping
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글 수정")
     public Article updateArticle(
