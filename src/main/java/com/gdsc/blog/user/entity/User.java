@@ -1,9 +1,14 @@
 package com.gdsc.blog.user.entity;
 
+import com.gdsc.blog.article.entity.Article;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.OneToMany;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,20 +32,26 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Table(name = "users")
 public class User {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long idx;
 
-	@Column(unique = true)
-	private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idx;
 
-	private String password;
+    @Column(unique = true)
+    private String email;
 
-	private String username;
+    private String password;
 
-	@ElementCollection(fetch = FetchType.EAGER)
-	List<UserRole> roles;
+    private String username;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    List<UserRole> roles;
+
+    //set relationship between article and user
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Article> articles;
 }

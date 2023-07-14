@@ -26,42 +26,42 @@ import com.gdsc.blog.user.entity.UserRole;
 @RequestMapping("/api/user")
 public class UserController {
 
-	UserService userService;
+    UserService userService;
 
-	public UserController(UserService userService) {
-		this.userService = userService;
-	}
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
-	@PostMapping("/signup")
-	@Operation(summary = "회원가입")
-	public User signup(@RequestBody SignUpDto user) {
+    @PostMapping("/signup")
+    @Operation(summary = "회원가입")
+    public User signup(@RequestBody SignUpDto user) {
 
-		User user1 = User.builder().email(user.getEmail()).password(user.getPassword())
-				.username(user.getUsername()).build();
+        User user1 = User.builder().email(user.getEmail()).password(user.getPassword())
+            .username(user.getUsername()).build();
 
 
-		return userService.signup(user1);
-	}
+        return userService.signup(user1);
+    }
 
-	@PostMapping("/signin")
-	@Operation(summary = "로그인")
-	public Token signin(@RequestBody SignInDto signInDto) {
-		Token token = Token.builder()
-				.token(userService.singin(signInDto.getEmail(), signInDto.getPassword())).build();
-		return token;
+    @PostMapping("/signin")
+    @Operation(summary = "로그인")
+    public Token signin(@RequestBody SignInDto signInDto) {
+        Token token = Token.builder()
+            .token(userService.singin(signInDto.getEmail(), signInDto.getPassword())).build();
+        return token;
 
-	}
+    }
 
-	@GetMapping("/getUser/{email}")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
-	public User getUser(@PathVariable("email") String email) {
-		return userService.getUser(email);
-	}
+    @GetMapping("/getUser/{email}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public User getUser(@PathVariable("email") String email) {
+        return userService.getUser(email);
+    }
 
-	@GetMapping("/whoisme")
-	@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-	public User whoisme(HttpServletRequest req) {
-		return userService.whoami(req);
-	}
+    @GetMapping("/whoisme")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+    public User whoisme(HttpServletRequest req) {
+        return userService.whoami(req);
+    }
 
 }

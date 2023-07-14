@@ -2,6 +2,7 @@ package com.gdsc.blog.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,12 +27,12 @@ public class SecurityConfig {
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
 		// Disable CSRF (cross site request forgery)
-		http.authorizeRequests()
-				.requestMatchers("/h2-console/**", "/swagger-ui/**", "/swagger-resources/**",
-						"/v3/api-docs/**", "/api/user/signin", "/api/user/signup")
-				.permitAll().anyRequest().authenticated();
+//		http.authorizeRequests()
+//				.requestMatchers("/h2-console/**", "/swagger-ui/**", "/swagger-resources/**",
+//						"/v3/api-docs/**", "/api/user/signin", "/api/user/signup")
+//				.permitAll().anyRequest().authenticated();
 
-		http.csrf().disable();
+		http.csrf(csrf->csrf.disable());
 
 		http.apply(new JwtTokenFilterConfigurer(jwtTokenProvider));
 

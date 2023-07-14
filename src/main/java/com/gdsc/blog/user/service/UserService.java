@@ -22,50 +22,63 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 public class UserService {
 
-	private final UserRepository userRepository;
-	private final PasswordEncoder passwordEncoder;
-	private final JwtTokenProvider jwtTokenProvider;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
+    public User signup(User user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // Client 역할 부여
+        if (user.getRoles() == null) {
+            List<UserRole> set = new ArrayList<UserRole>();
+            set.add(UserRole.ROLE_CLIENT);
+            user.setRoles(set);
+        }
+        return userRepository.save(user);
+    }
 
-	public String singin(String email, String password) {
-		try {
-			User user = userRepository.findByEmail(email).get();
-			log.info("user: {}", user);
-			log.info("email: {}", email);
-			log.info("password: {}", password);
-			if (!passwordEncoder.matches(password, user.getPassword())) {
-				log.error("Invalid password");
-				throw new RuntimeException("Invalid password");
-			}
-			return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
+    public String singin(String email, String password) {
+        try {
+            User user = userRepository.findByEmail(email).get();
+            log.info("user: {}", user);
+            log.info("email: {}", email);
+            log.info("password: {}", password);
+            if (!passwordEncoder.matches(password, user.getPassword())) {
+                log.error("Invalid password");
+                throw new RuntimeException("Invalid password");
+            }
+            return jwtTokenProvider.createToken(user.getUsername(), user.getRoles());
 
-		} catch (Exception e) {
-			log.info(e.getMessage());
-			log.error("Invalid username/password supplied");
-			throw new RuntimeException("Invalid username/password supplied");
-		}
-	}
+        } catch (Exception e) {
+            log.info(e.getMessage());
+            log.error("Invalid username/password supplied");
+            throw new RuntimeException("Invalid username/password supplied");
+        }
+    }
 
-	public User signup(User user) {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		// Client 역할 부여
-		if (user.getRoles() == null) {
-			List<UserRole> set = new ArrayList<UserRole>();
-			set.add(UserRole.ROLE_CLIENT);
-			user.setRoles(set);
-		}
-		return userRepository.save(user);
-	}
+    public User getUser(String username) {
+        return userRepository.findByEmail(username).get();
+    }
 
-	public User getUser(String username) {
-		return userRepository.findByEmail(username).get();
-	}
+    public User getUserByName(String username) {
+        try {
+            return userRepository.findByUsername(username).get();
+        } catch (Exception e) { //예외 처리
+            log.error("User not found");
+            throw new RuntimeException("User not found");
+        }
+    }
 
-	public User whoami(HttpServletRequest req) {
-		log.info(jwtTokenProvider.resolveToken(req));
-		return userRepository
-				.findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)))
-				.get();
-	}
+    public User whoami(HttpServletRequest req) {
+        try{
+            log.info(jwtTokenProvider.resolveToken(req));
+            return userRepository
+                .findByUsername(jwtTokenProvider.getUsername(jwtTokenProvider.resolveToken(req)))
+                .get();
+        } catch (Exception e) { //예외 처리
+            log.error("User not found");
+            throw new RuntimeException("User not found");
+        }
+    }
 
 }
