@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @Controller
@@ -46,7 +45,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')") //권한 설정
     @Operation(summary = "댓글 생성")
     public Comment createComment(
-        @PathVariable("postId") Long id,
+        @Parameter(description = "댓글 id") @PathVariable("postId") Long id,
         @Parameter(name="댓글 생성 DTO") @RequestBody CommentCreateDto dto,
         @Parameter(hidden = true) HttpServletRequest req) {
 
@@ -70,7 +69,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글에 대한 모든 댓글 조회")
     public List<Comment> getAllCommand(
-        @PathVariable("postId") Long id,
+        @Parameter(description = "댓글 id") @PathVariable("postId") Long id,
         @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
@@ -89,7 +88,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "id로 댓글 조회")
     public Comment getCommentById(
-        @PathVariable("commentId") Long id,
+        @Parameter(description = "댓글 id") @PathVariable("commentId") Long id,
         @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
@@ -106,7 +105,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "댓글 수정")
     public Comment updateComment(
-        @PathVariable("commentId") Long id,
+        @Parameter(description = "댓글 id") @PathVariable("commentId") Long id,
         @Parameter(name="댓글 수정 DTO") @RequestBody CommentUpdateDto dto,
         @Parameter(hidden = true) HttpServletRequest req){
         User user = userService.whoami(req);
@@ -123,7 +122,7 @@ public class CommentController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "댓글 삭제")
     public void deleteComment(
-        @PathVariable("commentId") Long id,
+        @Parameter(description = "댓글 id") @PathVariable("commentId") Long id,
         @Parameter(hidden = true) HttpServletRequest req){
         User user = userService.whoami(req);
 

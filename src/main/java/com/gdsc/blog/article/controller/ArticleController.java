@@ -81,7 +81,7 @@ public class ArticleController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "id로 게시글 조회")
     public Article getArticleById(
-        @PathVariable("id") Long id, //PathVariable에는 @Parameter를 사용할 수 없음!
+        @Parameter(description = "게시글 id") @PathVariable("id") Long id,
         @Parameter(hidden = true) HttpServletRequest req){
         return articleService.getArticleById(id);
     }
@@ -96,7 +96,7 @@ public class ArticleController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글 수정")
     public Article updateArticle(
-        @PathVariable(value = "id") Long id,
+        @Parameter(description = "게시글 id") @PathVariable(value = "id") Long id,
         @Parameter(name="게시글 수정 DTO") @RequestBody ArticleUpdateDto dto,
         @Parameter(hidden = true) HttpServletRequest req) throws ChangeSetPersister.NotFoundException, AccessDeniedException {
         User user = userService.whoami(req);
@@ -113,7 +113,7 @@ public class ArticleController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     @Operation(summary = "게시글 삭제")
     public void deleteArticle(
-        @PathVariable(value = "id") Long id,
+        @Parameter(description = "게시글 id") @PathVariable(value = "id") Long id,
         @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
