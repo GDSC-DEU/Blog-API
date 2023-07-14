@@ -1,7 +1,5 @@
 package com.gdsc.blog.comment.controller;
 
-import com.gdsc.blog.article.dto.ArticleCreateDto;
-import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.comment.dto.CommentCreateDto;
@@ -14,11 +12,9 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.h2.command.Command;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -52,7 +48,7 @@ public class CommentController {
     public Comment createComment(
         @PathVariable("postId") Long id,
         @Parameter(name="댓글 생성 DTO") @RequestBody CommentCreateDto dto,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
+        @Parameter(hidden = true) HttpServletRequest req) {
 
         Comment comment = Comment.builder()
             .content(dto.getContent())
@@ -75,7 +71,7 @@ public class CommentController {
     @Operation(summary = "게시글에 대한 모든 댓글 조회")
     public List<Comment> getAllCommand(
         @PathVariable("postId") Long id,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
+        @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
         Article article = articleService.getArticleById(id); //get article object
@@ -94,7 +90,7 @@ public class CommentController {
     @Operation(summary = "id로 댓글 조회")
     public Comment getCommentById(
         @PathVariable("commentId") Long id,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
+        @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
         return commentService.getCommentById(id);
@@ -112,7 +108,7 @@ public class CommentController {
     public Comment updateComment(
         @PathVariable("commentId") Long id,
         @Parameter(name="댓글 수정 DTO") @RequestBody CommentUpdateDto dto,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
+        @Parameter(hidden = true) HttpServletRequest req){
         User user = userService.whoami(req);
 
         return commentService.updateComment(id, dto);
@@ -128,7 +124,7 @@ public class CommentController {
     @Operation(summary = "댓글 삭제")
     public void deleteComment(
         @PathVariable("commentId") Long id,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
+        @Parameter(hidden = true) HttpServletRequest req){
         User user = userService.whoami(req);
 
         Comment comment = commentService.getCommentById(id); //get comment object

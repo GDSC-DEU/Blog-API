@@ -70,7 +70,7 @@ public class ArticleController {
     @Operation(summary = "모든 게시글 조회")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
     public List<Article> getUserArticle(
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req
+        @Parameter(hidden = true) HttpServletRequest req
     ) {
         User user = userService.whoami(req); //로그인 유저 정보 가져오기
 
@@ -82,7 +82,7 @@ public class ArticleController {
     @Operation(summary = "id로 게시글 조회")
     public Article getArticleById(
         @PathVariable("id") Long id, //PathVariable에는 @Parameter를 사용할 수 없음!
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req){
+        @Parameter(hidden = true) HttpServletRequest req){
         return articleService.getArticleById(id);
     }
 
@@ -98,7 +98,7 @@ public class ArticleController {
     public Article updateArticle(
         @PathVariable(value = "id") Long id,
         @Parameter(name="게시글 수정 DTO") @RequestBody ArticleUpdateDto dto,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) throws ChangeSetPersister.NotFoundException, AccessDeniedException {
+        @Parameter(hidden = true) HttpServletRequest req) throws ChangeSetPersister.NotFoundException, AccessDeniedException {
         User user = userService.whoami(req);
 
         return articleService.updateArticle(id, dto, user);
@@ -114,7 +114,7 @@ public class ArticleController {
     @Operation(summary = "게시글 삭제")
     public void deleteArticle(
         @PathVariable(value = "id") Long id,
-        @Parameter(name = "HTTP 파싱 객체") HttpServletRequest req) {
+        @Parameter(hidden = true) HttpServletRequest req) {
         User user = userService.whoami(req);
 
         Article article = articleService.getArticleById(id);
