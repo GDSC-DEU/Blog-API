@@ -1,6 +1,7 @@
 package com.gdsc.blog.comment.service;
 
 import com.gdsc.blog.article.entity.Article;
+import com.gdsc.blog.article.repository.ArticleRepository;
 import com.gdsc.blog.comment.dto.CommentUpdateDto;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.comment.repository.CommentRepository;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final ArticleRepository articleRepository;
 
     /**
      * 댓글 생성
@@ -24,8 +26,8 @@ public class CommentService {
      * @param article 개시글 객체
      * @param user    로그인 유저 객체
      */
-    public Comment create(Comment comment, Article article, User user) {
-        comment.setArticle(article);
+    public Comment create(Comment comment, Long id, User user) {
+        comment.setArticle(articleRepository.findById(id).orElseThrow());
         comment.setUser(user);
         comment.setCreateData(LocalDateTime.now());
         comment.setModifyData(LocalDateTime.now());

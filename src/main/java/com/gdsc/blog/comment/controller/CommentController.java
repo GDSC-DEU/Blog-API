@@ -1,5 +1,6 @@
 package com.gdsc.blog.comment.controller;
 
+import com.gdsc.blog.article.dto.ArticleDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
 import com.gdsc.blog.comment.dto.CommentCreateDto;
@@ -55,28 +56,27 @@ public class CommentController {
 
         User user = userService.whoami(req); //로그인 유저 정보 가져오기
 
-        Article article = articleService.getArticleById(id); //get article object
-        return commentService.create(comment, article, user); //create comment
+        return commentService.create(comment, id, user); //create comment
     }
 
-    /**
-     * 게시글에 대한 모든 댓글 조회
-     * @param id 게시글 id
-     * @param req HTTP 파싱 객체
-     * @return 댓글 객체 List
-     */
-    @GetMapping("/get/{postId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
-    @Operation(summary = "게시글에 대한 모든 댓글 조회")
-    public List<Comment> getAllCommand(
-        @Parameter(description = "게시글 id") @PathVariable("postId") Long id,
-        @Parameter(hidden = true) HttpServletRequest req) {
-        User user = userService.whoami(req);
-
-        Article article = articleService.getArticleById(id); //get article object
-
-        return commentService.getAllCommandByArticle(article); //return comment content
-    }
+//    /**
+//     * 게시글에 대한 모든 댓글 조회
+//     * @param id 게시글 id
+//     * @param req HTTP 파싱 객체
+//     * @return 댓글 객체 List
+//     */
+//    @GetMapping("/get/{postId}")
+//    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_CLIENT')")
+//    @Operation(summary = "게시글에 대한 모든 댓글 조회")
+//    public List<Comment> getAllCommand(
+//        @Parameter(description = "게시글 id") @PathVariable("postId") Long id,
+//        @Parameter(hidden = true) HttpServletRequest req) {
+//        User user = userService.whoami(req);
+//
+//        Article article = articleService.getArticleById(id); //get article object
+//
+//        return commentService.getAllCommandByArticle(article); //return comment content
+//    }
 
     /**
      * id로 댓글 조회

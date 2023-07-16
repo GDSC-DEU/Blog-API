@@ -1,6 +1,7 @@
 package com.gdsc.blog.article.controller;
 
 import com.gdsc.blog.article.dto.ArticleCreateDto;
+import com.gdsc.blog.article.dto.ArticleDto;
 import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.service.ArticleService;
@@ -43,15 +44,12 @@ public class ArticleController {
      */
     @PostMapping //컨트롤러 메핑
     @Operation(summary = "게시글 생성") //swagger 설명
-    public Article createArticle(
+    public ArticleDto createArticle(
             @Parameter(name = "게시글 생성 DTO") @RequestBody ArticleCreateDto articleCreateDto) {
 
         // TODO: 서비스 로직으로 분리
         //게시글 생성
-        Article article = Article.builder()
-                .title(articleCreateDto.getTitle())
-                .content(articleCreateDto.getContent())
-                .build();
+
 
         //로그인 유저 정보 가져오기
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -59,7 +57,7 @@ public class ArticleController {
 
         User user = userService.getUserByName(userName); //유저 이름 가져오기
 
-        return articleService.createArticle(article, user);
+        return articleService.createArticle(articleCreateDto, user);
     }
 
     /**
@@ -70,7 +68,7 @@ public class ArticleController {
      */
     @GetMapping
     @Operation(summary = "최근 게시글 조회")
-    public List<Article> getUserArticle(
+    public List<ArticleDto> getUserArticle(
             @Parameter(hidden = true) HttpServletRequest req
     ) {
         User user = userService.whoami(req); //로그인 유저 정보 가져오기
@@ -86,7 +84,7 @@ public class ArticleController {
      */
     @GetMapping("/{id}")
     @Operation(summary = "id로 게시글 조회")
-    public Article getArticleById(
+    public ArticleDto getArticleById(
             @Parameter(description = "게시글 id") @PathVariable("id") Long id,
             @Parameter(hidden = true) HttpServletRequest req) {
         return articleService.getArticleById(id);
@@ -101,10 +99,10 @@ public class ArticleController {
      */
     @GetMapping("/search")
     @Operation(summary = "제목으로 게시글 조회")
-    public Article getArticleByTitle(
+    public List<ArticleDto> getArticleByTitle(
             @Parameter(description = "게시글 제목") @RequestParam String title,
             @Parameter(hidden = true) HttpServletRequest req) {
-        return articleService.getArticleByTitle(title);
+        return articleService.findArticleByTitle(title);
     }
 
     /**
@@ -116,7 +114,7 @@ public class ArticleController {
      */
     @PatchMapping("/{id}") //생성 & 수정은 PostMapping
     @Operation(summary = "게시글 수정")
-    public Article updateArticle(
+    public ArticleDto updateArticle(
             @Parameter(description = "게시글 id") @PathVariable(value = "id") Long id,
             @Parameter(name = "게시글 수정 DTO") @RequestBody ArticleUpdateDto dto,
             @Parameter(hidden = true) HttpServletRequest req) {
@@ -137,10 +135,8 @@ public class ArticleController {
     public void deleteArticle(
             @Parameter(description = "게시글 id") @PathVariable(value = "id") Long id,
             @Parameter(hidden = true) HttpServletRequest req) {
+
         User user = userService.whoami(req);
-
-        Article article = articleService.getArticleById(id);
-
-        articleService.deleteArticle(article);
+        articleService.deleteArticle(id, user);
     }
 }

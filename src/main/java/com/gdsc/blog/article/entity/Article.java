@@ -3,15 +3,7 @@ package com.gdsc.blog.article.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.user.entity.User;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -49,6 +41,6 @@ public class Article {
     @JsonBackReference
     private User user;
 
-    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "article", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private List<Comment> comments;
 }
