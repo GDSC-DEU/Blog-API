@@ -36,8 +36,8 @@ public class CommentService {
         return commentRepository.save(comment);
     }
 
-    public List<Comment> getAllCommandByArticle(Article article) {
-        return commentRepository.findByArticle(article);
+    public List<Comment> getAllCommandByArticle(Long articleId) {
+        return commentRepository.findByArticle_Idx(articleId);
     }
 
     /**
@@ -49,7 +49,8 @@ public class CommentService {
     public Comment getCommentById(Long idx) {
         Optional<Comment> comment = commentRepository.findById(idx);
 
-        return comment.orElseThrow(() -> new NullPointerException("Not found Comment by id"));
+        return comment.orElseThrow();
+
     }
 
     /**
