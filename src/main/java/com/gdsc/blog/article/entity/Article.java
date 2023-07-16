@@ -4,16 +4,10 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.user.entity.User;
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Entity
 @NoArgsConstructor

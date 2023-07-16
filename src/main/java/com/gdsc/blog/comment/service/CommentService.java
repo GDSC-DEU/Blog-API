@@ -6,11 +6,12 @@ import com.gdsc.blog.comment.dto.CommentUpdateDto;
 import com.gdsc.blog.comment.entity.Comment;
 import com.gdsc.blog.comment.repository.CommentRepository;
 import com.gdsc.blog.user.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
@@ -54,7 +55,7 @@ public class CommentService {
     /**
      * 댓글 수정
      *
-     * @param id 댓글 id
+     * @param id               댓글 id
      * @param commentUpdateDto 댓글 수정 DTO
      */
     public Comment updateComment(Long id, CommentUpdateDto commentUpdateDto) {

@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Profile;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -33,6 +34,7 @@ class ArticleServiceTest {
     private UserService userService;
 
     User user;
+    User admin;
 
     @BeforeAll
     void setUp() {
@@ -42,6 +44,13 @@ class ArticleServiceTest {
                 .email("user@test.com")
                 .password("password")
                 .build());
+        admin = userService.signup(User.builder()
+                .username("admin")
+                .email("admin@admin.com")
+                .password("password")
+                .roles(Collections.singletonList(UserRole.ROLE_ADMIN))
+                .build());
+        userService.becomeAdmin(admin.getUsername());
     }
 
     @Test
@@ -54,7 +63,7 @@ class ArticleServiceTest {
                 .content("내용")
                 .build();
         // when
-        ArticleDto article = articleService.createArticle(articleCreateDto, user);
+        ArticleDto article = articleService.createArticle(articleCreateDto, user.getUsername());
 
         // then
         assertEquals(articleCreateDto.getTitle(), article.getTitle());
@@ -83,7 +92,7 @@ class ArticleServiceTest {
                         .build()
         );
         for (ArticleCreateDto articleCreateDto : articleCreateDtoList) {
-            articleService.createArticle(articleCreateDto, user);
+            articleService.createArticle(articleCreateDto, user.getUsername());
         }
         // when
         List<ArticleDto> articleDtoList = articleService.getUserArticle(user);
@@ -107,7 +116,7 @@ class ArticleServiceTest {
                 .title("제목")
                 .content("내용")
                 .build();
-        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user);
+        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user.getUsername());
 
 
         // when
@@ -149,7 +158,7 @@ class ArticleServiceTest {
         );
 
         for (ArticleCreateDto articleCreateDto : articleCreateDtoList) {
-            articleService.createArticle(articleCreateDto, user);
+            articleService.createArticle(articleCreateDto, user.getUsername());
         }
 
         // when
@@ -171,7 +180,7 @@ class ArticleServiceTest {
                 .title("제목")
                 .content("내용")
                 .build();
-        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user);
+        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user.getUsername());
 
         ArticleUpdateDto articleUpdateDto = ArticleUpdateDto.builder()
                 .title("수정된 제목")
@@ -179,7 +188,7 @@ class ArticleServiceTest {
                 .build();
 
         // when
-        ArticleDto updatedArticle = articleService.updateArticle(SavedArticle.getIdx(), articleUpdateDto, user);
+        ArticleDto updatedArticle = articleService.updateArticle(SavedArticle.getIdx(), articleUpdateDto, user.getUsername());
 
         // then
         assertEquals(articleUpdateDto.getTitle(), updatedArticle.getTitle());
@@ -196,7 +205,7 @@ class ArticleServiceTest {
                 .title("제목")
                 .content("내용")
                 .build();
-        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user);
+        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user.getUsername());
 
         ArticleUpdateDto articleUpdateDto = ArticleUpdateDto.builder()
                 .title("수정된 제목")
@@ -210,7 +219,7 @@ class ArticleServiceTest {
                 .password("anotherUser")
                 .build();
 
-        assertThrows(IllegalArgumentException.class, () -> articleService.updateArticle(SavedArticle.getIdx(), articleUpdateDto, anotherUser));
+        assertThrows(NoSuchElementException.class, () -> articleService.updateArticle(SavedArticle.getIdx(), articleUpdateDto, anotherUser.getUsername()));
     }
 
     @Test
@@ -221,10 +230,10 @@ class ArticleServiceTest {
                 .title("제목")
                 .content("내용")
                 .build();
-        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user);
+        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user.getUsername());
 
         // when
-        articleService.deleteArticle(SavedArticle.getIdx(), user);
+        articleService.deleteArticle(SavedArticle.getIdx(), user.getUsername());
 
         // then
         assertThrows(IllegalArgumentException.class, () -> articleService.getArticleById(SavedArticle.getIdx()));
@@ -238,12 +247,11 @@ class ArticleServiceTest {
                 .title("제목")
                 .content("내용")
                 .build();
-        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user);
+        ArticleDto SavedArticle = articleService.createArticle(articleCreateDto, user.getUsername());
 
         // when
 
-        User admin = User.builder().roles(Collections.singletonList(UserRole.ROLE_ADMIN)).build();
-        articleService.deleteArticle(SavedArticle.getIdx(), admin);
+        articleService.deleteArticle(SavedArticle.getIdx(), admin.getUsername());
 
         // then
         assertThrows(IllegalArgumentException.class, () -> articleService.getArticleById(SavedArticle.getIdx()));
