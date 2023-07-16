@@ -12,6 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -39,8 +41,8 @@ public class Article {
     @Column(columnDefinition = "TEXT") //no limit length of text
     private String content;
 
-    private LocalDateTime createDate; //생성 날짜
-    private LocalDateTime modifyDate; //수정된 날짜
+    private Timestamp createDate; //생성 날짜
+    private Timestamp modifyDate; //수정된 날짜
 
     //set relationship between article and user
     @ManyToOne

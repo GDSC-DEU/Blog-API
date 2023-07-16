@@ -4,6 +4,8 @@ import com.gdsc.blog.article.dto.ArticleUpdateDto;
 import com.gdsc.blog.article.entity.Article;
 import com.gdsc.blog.article.repository.ArticleRepository;
 import com.gdsc.blog.user.entity.User;
+
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -25,8 +27,8 @@ public class ArticleService {
     public Article createArticle(
         Article article,
         User user) { //create new article
-        article.setCreateDate(LocalDateTime.now());
-        article.setModifyDate(LocalDateTime.now());
+        article.setCreateDate(new Timestamp(System.currentTimeMillis()));
+        article.setModifyDate(new Timestamp(System.currentTimeMillis()));
         article.setUser(user);
         return articleRepository.save(article);
     }
@@ -71,7 +73,7 @@ public class ArticleService {
         Article article = getArticleById(id); //게시글 id로 게시글 가져오기
         article.setTitle(dto.getTitle());
         article.setContent(dto.getContent());
-        article.setModifyDate(LocalDateTime.now());
+        article.setModifyDate(new Timestamp(System.currentTimeMillis()));
 
         return articleRepository.save(article);
     }
