@@ -1,27 +1,28 @@
 package com.gdsc.blog.user.repository;
 
-import java.util.Optional;
-import org.springframework.data.jpa.repository.JpaRepository;
 import com.gdsc.blog.user.entity.User;
 import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	// 아이디 중복 체크
-	boolean existsByEmail(String email);
+    // 아이디 중복 체크
+    boolean existsByEmail(String email);
 
-	// 로그인 메소드
-	Optional<User> findByEmailAndPassword(String email, String password);
+    // 로그인 메소드
+    Optional<User> findByEmailAndPassword(String email, String password);
 
 
-	// 회원 탈퇴
-	@Transactional
-	void deleteById(Long id);
+    // 회원 탈퇴
+    @Transactional
+    void deleteById(Long id);
 
-	// 유저 검색
-	Optional<User> findByEmail(String email);
+    // 유저 검색
+    Optional<User> findByEmail(String email);
 
-	Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
-	// 회원가입 메소드
+    // 회원가입 메소드
 }
