@@ -33,22 +33,24 @@ public class ArticleService {
      *
      * @param articleCreateDto 게시글 생성 DTO
      * @param username         작성자
+     * @throws IllegalArgumentException 유저 정보가 없을 경우
      */
-    public ArticleDto createArticle(
-            ArticleCreateDto articleCreateDto,
-            String username) {
+    public ArticleDto createArticle(ArticleCreateDto articleCreateDto, String username) {
 
         // 현재 시간
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         // 유저 정보
-        User user = userRepository.findByUsername(username).orElseThrow();
+        Optional<User> user = userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            throw new IllegalArgumentException("Invalid username");
+        }
 
         // 게시글 생성
         Article article = Article.builder()
                 .title(articleCreateDto.getTitle())
                 .content(articleCreateDto.getContent())
-                .user(user)
+                .user(user.get())
                 .createDate(timestamp)
                 .modifyDate(timestamp)
                 .build();
@@ -80,7 +82,7 @@ public class ArticleService {
     public List<ArticleDto> getUserArticle(User user) {
         // get user article list
         List<Article> articles = articleRepository.findByUser(user);
-        log.info("articles: {}", articles);
+        log.debug("articles: {}", articles);
 
         // article list to article dto list
         List<ArticleDto> articleList = new ArrayList<>();
@@ -96,13 +98,10 @@ public class ArticleService {
      * @return Article 객체
      */
     public ArticleDto getArticleById(Long idx) { //get article by id
-        Optional<Article> article = articleRepository.findById(idx);
-
-        if (article.isPresent()) {
-            return articleMapper.toDto(article.get());
-        } else {
-            throw new IllegalArgumentException("Not found Article by id");
-        }
+        Article article = articleRepository.findById(idx).orElseThrow(
+                () -> new IllegalArgumentException("Not found Article by id")
+        );
+        return articleMapper.toDto(article);
     }
 
     public List<ArticleDto> findArticleByTitle(String title) {
